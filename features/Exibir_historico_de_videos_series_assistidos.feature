@@ -12,6 +12,18 @@ Feature: Exibir Histórico de Vídeos/Séries Assistidos e Assistidos Recentemen
     Then o usuário é redirecionado para a página de visualização do vídeo "Breaking Bad - Episódio 1"
     And "Breaking Bad - Episódio 1" aparece no topo do histórico de visualizações do usuário
 
+    Scenario: Exibir 2 vídeos por página com botões de navegação
+    Given o usuário está logado na plataforma
+    And o usuário possui 3 vídeos assistidos no histórico
+    When o usuário acessa a página de histórico de visualizações
+    Then o sistema exibe os primeiros 2 vídeos (1 a 2) na primeira página
+    
+    When o usuário clica no botão "Próximo"
+    Then o sistema exibe o último 1  vídeo na segunda página
+
+    When o usuário clica no botão "anterior"
+    Then o sistema exibe os últimos 2 vídeos (1 a 2) na primeira página 
+
 	Scenario: Exibir mensagem padrão para usuários sem histórico de visualizações
     Given o usuário está logado na plataforma
     And o usuário nunca assistiu a nenhum vídeo/série
