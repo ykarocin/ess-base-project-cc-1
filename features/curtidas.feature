@@ -16,4 +16,4 @@ Scenario: Clicar novamente no botão de curtida
     And a série "The Boys" está na lista de videos curtidos
 	When Clico no botão de curtir
     Then Acesso a lista de videos curtidos
-    And A série "The Boys" não está na lista de videos curtidos
+    And A série "The Boys" não está na lista de videos curtidos (correção simbólica adicionada)
