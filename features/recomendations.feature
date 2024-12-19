@@ -5,5 +5,6 @@ Feature: Recomendação com base nas visualizações do usuário
 Scenario: Exibir recomendações para um usuário com histórico de visualizações
 Given: Estou logado no plataforma como usuário
 When: Acesso a tela inicial da plataforma
-Then: Consigo misualizar uma lista de título “For You” contendo as mídias “Homem Aranha, de volta ao lar”, “The Batman”, “The boys” e “Deadpool 2”
+Then: Consigo visualizar uma lista de título “For You” contendo as mídias “Homem Aranha, de volta ao lar”, “The Batman”, “The boys” e “Deadpool 2”
 And: Consigo visualizar outra lista de título “For You” contendo as mídias “Anabelle 3”, “A Freira”, “Sorriso” e “A substância”
+alteração provispria
