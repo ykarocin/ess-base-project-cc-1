@@ -26,3 +26,4 @@ Scenario: Visualização da lista “Em alta”
 Given Acesso a plataforma
 When Acesso a tela inicial
 Then Está presente uma lista de título “Em Alta” contendo as mídias “Vingadores - Ultimato”, “Avatar - O caminho da água”, “Pobres Criaturas” e “La La Land: Cantando Estações”
+And Passo adicional sinalizado pelo roteiro
