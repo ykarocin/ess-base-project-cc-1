@@ -23,3 +23,9 @@ Feature: Sistema de Visibilidade de Vídeos
     When o usuário tenta acessar a página de visualização do vídeo "Friends - Episódio 5" diretamente via URL
     Then o sistema redireciona o usuário para a página de login
     And exibe a mensagem "Por favor, faça login para acessar o vídeo."
+
+    Scenario: Exibir elementos essenciais na página de visualização
+    Given o usuário está logado na plataforma
+    And o usuário está na página inicial
+    When o usuário clica no vídeo "Breaking Bad - Temporada 1, Episódio 1"
+    Then a página de visualização do vídeo "Breaking Bad - Temporada 1, Episódio 1" é exibida
