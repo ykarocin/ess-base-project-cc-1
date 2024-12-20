@@ -24,6 +24,7 @@ Feature: Sistema de Visibilidade de Vídeos
     Then o sistema redireciona o usuário para a página de login
     And exibe a mensagem "Por favor, faça login para acessar o vídeo."
 
+    Cenário precisa ser concertado
     Scenario: Exibir elementos essenciais na página de visualização
     Given o usuário está logado na plataforma
     And o usuário está na página inicial
