@@ -39,3 +39,12 @@ And insere sua "Senha" incorretamente, "Y"
 Then ele recebe um aviso de alteração cadastral malsucedido
 And o usuário pode ver que seus dados "Nome completo", "Usuário/Email", "Senha", "Data de nascimento", "Gênero" e "Foto" são, 
 respectivamente, "Lucas Henrique", "LucasHenrique", "X", "20/02/2004", "Masculino", "minha-foto.jpg"
+
+Scenario: Cadastrar um usuário que não está cadastrado no sistema
+Given não há usuário cadastrado no sistema com  id "2" e usuário “LucasHenrique”
+When Faço uma Requisição POST para a rota "/users/2" com id "2", nome completo “Lucas Henrique”, usuário/email “LucasHenrique”, 
+senha ”X”, data de nascimento “20/02/2004”, gênero “Masculino”, foto “minha-foto.jpg”
+Then O status da resposta deve ser 200
+And a resposta JSON deve ser "2", “Lucas Henrique”, “LucasHenrique”, ”X”, “20/02/2004”, “Masculino”, “minha-foto.jpg”
+And o usuário com id "2", nome completo “Lucas Henrique”, usuário/email “LucasHenrique”, senha ”X”, data de nascimento “20/02/2004”,
+gênero “Masculino”, foto “minha-foto.jpg” foi devidamente armazenado no sistema.
