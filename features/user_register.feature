@@ -48,5 +48,3 @@ Then O status da resposta deve ser 200
 And a resposta JSON deve ser "2", “Lucas Henrique”, “LucasHenrique”, ”X”, “20/02/2004”, “Masculino”, “minha-foto.jpg”
 And o usuário com id "2", nome completo “Lucas Henrique”, usuário/email “LucasHenrique”, senha ”X”, data de nascimento “20/02/2004”,
 gênero “Masculino”, foto “minha-foto.jpg” foi devidamente armazenado no sistema
-
-alteração 2
