@@ -39,3 +39,4 @@ And insere sua "Senha" incorretamente, "Y"
 Then ele recebe um aviso de alteração cadastral malsucedido
 And o usuário pode ver que seus dados "Nome completo", "Usuário/Email", "Senha", "Data de nascimento", "Gênero" e "Foto" são, 
 respectivamente, "Lucas Henrique", "LucasHenrique", "X", "20/02/2004", "Masculino", "minha-foto.jpg"
+Then o cenário precisa de um passo adicional para a questão do roteiro 
