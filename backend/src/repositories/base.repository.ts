@@ -26,14 +26,11 @@ export default class BaseRepository<T extends BaseEntity> {
       this.db.data[this.prefix].push(newItem);
       return newItem;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao adicionar registro' });
     }
   }
 
-  public async update(
-    filter: FilterFunction<T>,
-    data: Partial<T>
-  ): Promise<T | null> {
+  public async update(filter: FilterFunction<T>, data: Partial<T>): Promise<T | null> {
     try {
       if (!this.db.data[this.prefix]) {
         return null;
@@ -46,7 +43,7 @@ export default class BaseRepository<T extends BaseEntity> {
       }
       return null;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao atualizar registro' });
     }
   }
 
@@ -57,7 +54,7 @@ export default class BaseRepository<T extends BaseEntity> {
       }
       return this.db.data[this.prefix].find(filter) || null;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao buscar registro' });
     }
   }
 
@@ -66,11 +63,9 @@ export default class BaseRepository<T extends BaseEntity> {
       if (!this.db.data[this.prefix]) {
         return [];
       }
-      return filter
-        ? this.db.data[this.prefix].filter(filter)
-        : this.db.data[this.prefix];
+      return filter ? this.db.data[this.prefix].filter(filter) : this.db.data[this.prefix];
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao buscar registros' });
     }
   }
 
@@ -79,10 +74,9 @@ export default class BaseRepository<T extends BaseEntity> {
       if (!this.db.data[this.prefix]) {
         return;
       }
-
       this.db.data[this.prefix] = this.db.data[this.prefix].filter(filter);
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao remover registro' });
     }
   }
 }

@@ -8,16 +8,13 @@ import { FailureResult } from './utils/result';
 import Database from './database';
 
 const app: express.Express = express();
-app.use(express.json());
 
-app.use(
-  cors({
-    origin: '*',
-  })
-);
+app.use(express.json());
+app.use(cors({ origin: '*' }));
 
 setupRoutes(app);
 
+// Tratamento global de erros
 app.use(
   (
     error: HttpError,
@@ -28,7 +25,6 @@ app.use(
     if (error.status >= 500) {
       logger.error(error.toString());
     }
-
     new FailureResult({
       msg: error.msg ?? error.message,
       msgCode: error.msgCode,
@@ -37,7 +33,7 @@ app.use(
   }
 );
 
-// e.g. Seed database with initial data;
+// Seed do banco (dados iniciais)
 Database.seed();
 
 export default app;
