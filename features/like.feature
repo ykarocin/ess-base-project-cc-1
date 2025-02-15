@@ -18,6 +18,7 @@ Scenario: Clicar novamente no botão de curtida
     Then A lista “séries curtidas” está vazia
 
 Scenario: Obter a lista de séries curtidas pelo usuário
+    Given O usuário "Ykaro" está logado no sistema
     When  Uma requisição “GET” é enviada para “/usuario/seriesCurtidas”
 	Then O status da resposta deve ser “200”
     And O JSON da resposta contém a lista “séries curtidas”
