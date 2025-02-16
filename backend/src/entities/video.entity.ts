@@ -6,7 +6,7 @@ interface IVideoProps {
   duracao: string;
   views: number;
   likes?: number;
-  imageUrl?: string;
+  videoLink?: string;
 }
 
 export default class VideoEntity extends BaseEntity {
@@ -15,15 +15,15 @@ export default class VideoEntity extends BaseEntity {
   public duracao: string;
   public views: number;
   public likes: number;
-  public imageUrl: string;
+  public videoLink: string;
 
-  constructor({ videoId, titulo, duracao, views, likes = 0, imageUrl = '' }: IVideoProps) {
+  constructor({ videoId, titulo, duracao, views, likes = 0, videoLink = '' }: IVideoProps) {
     super();
     this.videoId = videoId;
     this.titulo = titulo;
     this.duracao = duracao;
     this.views = views;
     this.likes = likes;
-    this.imageUrl = imageUrl;
+    this.videoLink = videoLink;
   }
 }

@@ -16,7 +16,6 @@ export default class VideoController {
   private initRoutes(): void {
     this.router.get(`${this.prefix}/:id`, this.getVideo.bind(this));
     this.router.post(`${this.prefix}/:id/visualizacao`, this.registerView.bind(this));
-    // Se houver endpoints de curtidas, você pode adicioná-los aqui
   }
 
   private async getVideo(req: Request, res: Response): Promise<void> {

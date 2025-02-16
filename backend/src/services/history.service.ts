@@ -19,7 +19,7 @@ export default class HistoryService {
 
   public async addOrUpdateHistory(
     userId: string,
-    videoData: { videoId: string;}
+    videoData: { videoId: string; titulo?: string }
   ): Promise<{ message: string; history: HistoryItemEntity[] }> {
     if (!this.validUsers.has(userId)) {
       throw new HttpNotFoundError({ msg: 'Usuário não encontrado', msgCode: 'user_not_found' });
@@ -28,10 +28,7 @@ export default class HistoryService {
     const existing = await this.historyRepository.getHistoryItem(userId, videoData.videoId);
     let message: string;
     if (existing) {
-      await this.historyRepository.update(
-        item => item.id === existing.id,
-        { ultimaVisualizacao: now }
-      );
+      await this.historyRepository.updateById(existing.id, { ultimaVisualizacao: now });
       message = 'Data de visualização atualizada';
     } else {
       const newItem = new HistoryItemEntity({

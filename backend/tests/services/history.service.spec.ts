@@ -7,7 +7,6 @@ describe('HistoryService', () => {
   let mockHistoryRepository: HistoryRepository;
   let service: HistoryService;
 
-  // Cria um item de histórico sem o campo "titulo"
   const mockHistoryItem: HistoryItemEntity = new HistoryItemEntity({
     userId: '1',
     videoId: '101',
@@ -19,7 +18,7 @@ describe('HistoryService', () => {
       getHistoryByUserId: jest.fn(),
       getHistoryItem: jest.fn(),
       add: jest.fn(),
-      update: jest.fn(),
+      updateById: jest.fn(),  // Use updateById aqui também
     } as any;
     service = new HistoryService(mockHistoryRepository);
   });
@@ -51,7 +50,7 @@ describe('HistoryService', () => {
 
   it('should update an existing history item if it exists', async () => {
     (mockHistoryRepository.getHistoryItem as jest.Mock).mockResolvedValue(mockHistoryItem);
-    (mockHistoryRepository.update as jest.Mock).mockResolvedValue({
+    (mockHistoryRepository.updateById as jest.Mock).mockResolvedValue({
       ...mockHistoryItem,
       ultimaVisualizacao: new Date().toISOString(),
     });
@@ -59,6 +58,6 @@ describe('HistoryService', () => {
 
     const result = await service.addOrUpdateHistory('1', { videoId: '101', titulo: 'Ignored Title' });
     expect(result.message).toEqual('Data de visualização atualizada');
-    expect(mockHistoryRepository.update).toBeCalled();
+    expect(mockHistoryRepository.updateById).toBeCalled();
   });
 });

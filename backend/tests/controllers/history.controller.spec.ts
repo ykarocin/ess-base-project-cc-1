@@ -8,17 +8,16 @@ describe('HistoryController', () => {
   const request = supertest(app);
   let historyRepo: HistoryRepository;
 
-  beforeEach(() => {
-    // Reinicia e semeia o banco de dados antes de cada teste
-    Database.reset();
-    Database.seed();
+  beforeEach(async () => {
+    await Database.reset();
+    await Database.getInstance().then(db => db.seed());
     historyRepo = di.getRepository(HistoryRepository);
   });
 
   it('should return history for a valid user (non-empty)', async () => {
     const response = await request.get('/api/users/1/history');
     expect(response.status).toBe(200);
-    // Agora o GET retorna um array de videoIds (strings)
+    // O GET retorna um array de videoIds (strings)
     expect(response.body).toEqual(expect.arrayContaining(['101', '102']));
   });
 
@@ -37,9 +36,8 @@ describe('HistoryController', () => {
   it('should add a new history item', async () => {
     const payload = {
       videoId: '201',
-      titulo: 'The Office - Episódio 3' // Mesmo que o service ignore esse campo, o payload pode vir assim.
+      titulo: 'The Office - Episódio 3'
     };
-    // Agora, a rota utiliza PUT para criar/atualizar o histórico
     const response = await request.put('/api/users/3/history').send(payload);
     expect(response.status).toBe(201);
     expect(response.body.data.message).toEqual('Vídeo adicionado ao histórico');
@@ -50,9 +48,7 @@ describe('HistoryController', () => {
       videoId: '201',
       titulo: 'The Office - Episódio 3'
     };
-    // Primeiro, adiciona o item...
     await request.put('/api/users/3/history').send(payload);
-    // ... e em seguida atualiza (a mesma chamada atualiza o timestamp)
     const response = await request.put('/api/users/3/history').send(payload);
     expect(response.status).toBe(200);
     expect(response.body.data.message).toEqual('Data de visualização atualizada');

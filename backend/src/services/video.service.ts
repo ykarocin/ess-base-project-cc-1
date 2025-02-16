@@ -22,11 +22,7 @@ export default class VideoService {
     if (!video) {
       throw new HttpNotFoundError({ msg: 'Vídeo não encontrado', msgCode: 'video_not_found' });
     }
-    await this.videoRepository.update(
-      item => item.id === video.id,
-      { views: video.views + 1 }
-    );
+    await this.videoRepository.updateById(video.id, { views: video.views + 1 });
     return { message: 'Visualização registrada com sucesso', videoId: video.videoId, userId };
   }
-
 }

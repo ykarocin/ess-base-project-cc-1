@@ -8,9 +8,9 @@ describe('VideoController', () => {
   const request = supertest(app);
   let videoRepo: VideoRepository;
 
-  beforeEach(() => {
-    Database.reset();
-    Database.seed();
+  beforeEach(async () => {
+    await Database.reset();
+    await Database.getInstance().then(db => db.seed());
     videoRepo = di.getRepository(VideoRepository);
   });
 
@@ -20,6 +20,7 @@ describe('VideoController', () => {
     expect(response.body.videoId).toEqual('101');
     expect(response.body.titulo).toEqual('Stranger Things - Piloto');
     expect(response.body.duracao).toEqual('45 minutos');
+    expect(response.body.videoLink).toEqual('https://youtube.com/watch?v=101');
   });
 
   it('should return 404 when video is not found', async () => {

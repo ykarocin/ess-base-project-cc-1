@@ -1,3 +1,4 @@
+// src/app.ts
 import express from 'express';
 import 'express-async-errors';
 import cors from 'cors';
@@ -32,8 +33,5 @@ app.use(
     }).handle(res);
   }
 );
-
-// Seed do banco (dados iniciais)
-Database.seed();
 
 export default app;

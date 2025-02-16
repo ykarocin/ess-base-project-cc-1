@@ -18,7 +18,7 @@ defineFeature(feature, (test) => {
       getHistoryByUserId: jest.fn(),
       getHistoryItem: jest.fn(),
       add: jest.fn(),
-      update: jest.fn(),
+      updateById: jest.fn(), // Alterado aqui: updateById
     } as any;
     service = new HistoryService(mockHistoryRepository);
   });
@@ -128,7 +128,8 @@ defineFeature(feature, (test) => {
         ultimaVisualizacao: new Date("2020-01-01").toISOString(),
       });
       (mockHistoryRepository.getHistoryItem as jest.Mock).mockResolvedValue(mockHistoryItem);
-      (mockHistoryRepository.update as jest.Mock).mockResolvedValue({
+      // Aqui usamos updateById no lugar de update
+      (mockHistoryRepository.updateById as jest.Mock).mockResolvedValue({
         ...mockHistoryItem,
         ultimaVisualizacao: new Date().toISOString(),
       });
@@ -149,7 +150,7 @@ defineFeature(feature, (test) => {
     });
 
     and(/^o corpo da resposta \(JSON\) contém "(.*)"$/, (expectedMessage) => {
-      expect(mockHistoryRepository.update).toHaveBeenCalled();
+      expect(mockHistoryRepository.updateById).toHaveBeenCalled();
     });
   });
 });
