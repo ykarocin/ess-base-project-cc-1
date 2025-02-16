@@ -23,7 +23,6 @@ And vê que os seus dados são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/2004     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
@@ -34,7 +33,6 @@ And o usuário pode ver que seus dados são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/1994     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
@@ -45,7 +43,6 @@ And vê que seus dados são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/2004     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
@@ -56,7 +53,6 @@ And o usuário pode ver que seus dados agora são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/2004     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
@@ -67,7 +63,6 @@ And vê que seus dados são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/2004     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
@@ -83,7 +78,6 @@ And vê que seus dados são:
 | Campo               | Valor          |
 | Nome completo       | Lucas Henrique |
 | Usuário/Email       | LucasHenrique  |
-| Senha               | X              |
 | Data de nascimento  | 20/02/2004     |
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
