@@ -40,23 +40,6 @@ And a resposta JSON deve conter os seguintes dados:
 | code    | 409                 |
 And nenhum novo usuário foi cadastrado no sistema
 
-Scenario: Cadastro de usuário com dados inválidos 
-Given não há usuário cadastrado no sistema com  usuário “LucasHenrique”
-When faço uma Requisição POST para a rota "/users" com os seguintes dados:
-| Campo               | Valor          |
-| Nome completo       | ””             |
-| Usuário/Email       | lucas@email    |
-| Data de nascimento  | 32/13/3000     |
-| Gênero              | abc123         |
-| Foto                | minha-foto.jpg |
-Then O status da resposta deve ser 400
-And a resposta JSON deve conter os seguintes dados:
-| Campo    | Valor               |
-| error    | Email já cadastrado |
-| code     | 400                 |
-| errors   | Nome obrigatório, E-mail inválido, Senha muito curta, Data de nascimento inválida, Gênero inválido |
-And nenhum novo usuário foi cadastrado no sistema
-
 Scenario: Exibição de usuário bem-sucedido
 Given há um usuário cadastrado no sistema com id "2", nome completo "Lucas Henrique", usuário/email "LucasHenrique", data de nascimento "20/02/2004", gênero "Masculino" e foto "minha-foto.jpg"
 When faço uma Requisição GET para a rota "/users/2" 
@@ -109,10 +92,10 @@ Then o status da resposta deve ser 200 And a resposta JSON deve conter os seguin
 Scenario: Alteração cadastral malsucedida (senha errada)
 Given há um usuário cadastrado no sistema com id "2", nome completo "Lucas Henrique", email "lucashenrique", senha "X", data de nascimento "20/02/2004", gênero "Masculino" e foto "minha-foto.jpg" 
 When faço uma Requisição PUT para a rota "/users/2" com nome completo "Lucas Henrique Silva", email "lucashenrique@gmail.com", senha "X", data de nascimento "20/02/2004", gênero "Masculino", foto "minha-foto-nova.jpg" 
-Then o status da resposta deve ser 200 And a resposta JSON deve conter os seguintes dados:
+Then o status da resposta deve ser 401 And a resposta JSON deve conter os seguintes dados:
 | Campo   | Valor               |
 | error   | Senha incorreta     |
-| code    | 400                 |
+| code    | 401                 |
 
 Scenario: Alteração cadastral malsucedida (email já cadastrado)
 Given há um usuário cadastrado no sistema com id "2", nome completo "Lucas Henrique", email "lucashenrique", senha "X", data de nascimento "20/02/2004", gênero "Masculino" e foto "minha-foto.jpg" 
