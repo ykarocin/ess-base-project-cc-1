@@ -70,6 +70,21 @@ And a resposta JSON deve conter os seguintes dados:
 | Gênero              | Masculino      |
 | Foto                | minha-foto.jpg |
 
+Scenario: Exibição de todos os usuários cadastrados
+Given que há os seguintes usuários cadastrados no sistema:
+| Id | Nome completo   | Usuário/Email | Data de nascimento | Gênero    | Foto           |
+| 1  | Ana Clara       | AnaClara      | 15/03/1995         | Feminino  | ana-foto.jpg   |
+| 2  | Lucas Henrique  | LucasHenrique | 20/02/2004         | Masculino | minha-foto.jpg |
+| 3  | João Pedro      | JoaoPedro     | 10/11/1987         | Masculino | joao-foto.jpg  |
+When faço uma requisição GET para a rota "/users"
+Then o status da resposta deve ser 200
+And a resposta JSON deve conter a lista de usuários com os seguintes dados:
+| Id | Nome completo   | Usuário/Email | Data de nascimento | Gênero    | Foto           |
+| 1  | Ana Clara       | AnaClara      | 15/03/1995         | Feminino  | ana-foto.jpg   |
+| 2  | Lucas Henrique  | LucasHenrique | 20/02/2004         | Masculino | minha-foto.jpg |
+| 3  | João Pedro      | JoaoPedro     | 10/11/1987         | Masculino | joao-foto.jpg  |
+
+
 Scenario: Exibição de usuário malsucedido
 Given não há usuário no sistema com id "2"
 When faço uma Requisição GET para a rota "/users/2" 
