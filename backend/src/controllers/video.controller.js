@@ -1,24 +1,21 @@
-import { Request, Response, Router } from 'express';
-import VideoService from '../services/video.service';
-import { SuccessResult } from '../utils/result';
+const { Router } = require('express');
+const VideoService = require('../services/video.service');
+const { SuccessResult } = require('../utils/result');
 
-export default class VideoController {
-  public router: Router;
-  private videoService: VideoService;
-  private prefix: string = '/videos';
-
-  constructor(router: Router, videoService: VideoService) {
+class VideoController {
+  constructor(router, videoService) {
     this.router = router;
     this.videoService = videoService;
+    this.prefix = '/videos';
     this.initRoutes();
   }
 
-  private initRoutes(): void {
+  initRoutes() {
     this.router.get(`${this.prefix}/:id`, this.getVideo.bind(this));
     this.router.post(`${this.prefix}/:id/visualizacao`, this.registerView.bind(this));
   }
 
-  private async getVideo(req: Request, res: Response): Promise<void> {
+  async getVideo(req, res) {
     try {
       const videoId = req.params.id;
       const video = await this.videoService.getVideo(videoId);
@@ -26,12 +23,12 @@ export default class VideoController {
         msg: `${req.method} ${req.originalUrl}`,
         data: video,
       }).handle(res);
-    } catch (error: any) {
+    } catch (error) {
       res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });
     }
   }
 
-  private async registerView(req: Request, res: Response): Promise<void> {
+  async registerView(req, res) {
     try {
       const videoId = req.params.id;
       const { userId } = req.body;
@@ -41,8 +38,10 @@ export default class VideoController {
         data: result,
         code: 201,
       }).handle(res);
-    } catch (error: any) {
+    } catch (error) {
       res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });
     }
   }
 }
+
+module.exports = VideoController;

@@ -1,4 +1,4 @@
-import pino from 'pino';
+const pino = require('pino');
 
 const logger = pino(
   {
@@ -7,4 +7,4 @@ const logger = pino(
   process.stdout
 );
 
-export default logger;
+module.exports = logger;

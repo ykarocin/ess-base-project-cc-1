@@ -1,9 +1,9 @@
-import Injector from './injector';
-import HistoryRepository from '../repositories/history.repository';
-import VideoRepository from '../repositories/video.repository';
-import HistoryService from '../services/history.service';
-import VideoService from '../services/video.service';
-import Database from '../database';
+const Injector = require('./injector');
+const HistoryRepository = require('../repositories/history.repository');
+const VideoRepository = require('../repositories/video.repository');
+const HistoryService = require('../services/history.service');
+const VideoService = require('../services/video.service');
+const Database = require('../database');
 
 const di = new Injector();
 
@@ -23,4 +23,4 @@ di.registerRepository(VideoRepository, videoRepo);
 di.registerService(HistoryService, new HistoryService(di.getRepository(HistoryRepository)));
 di.registerService(VideoService, new VideoService(di.getRepository(VideoRepository)));
 
-export { di };
+module.exports = { di };

@@ -1,26 +1,27 @@
-import supertest from 'supertest';
-import app from '../../src/app';
-import Database from '../../src/database';
-import { di } from '../../src/di';
-import VideoRepository from '../../src/repositories/video.repository';
+const supertest = require('supertest');
+const app = require('../../src/app');
+const Database = require('../../src/database');
+const { di } = require('../../src/di');
+const VideoRepository = require('../../src/repositories/video.repository');
 
 describe('VideoController', () => {
   const request = supertest(app);
-  let videoRepo: VideoRepository;
+  let videoRepo;
 
   beforeEach(async () => {
     await Database.reset();
-    await Database.getInstance().then(db => db.seed());
+    const dbInstance = await Database.getInstance();
+    await dbInstance.seed();
     videoRepo = di.getRepository(VideoRepository);
   });
 
   it('should return video data for a valid video', async () => {
     const response = await request.get('/api/videos/101');
     expect(response.status).toBe(200);
-    expect(response.body.videoId).toEqual('101');
-    expect(response.body.titulo).toEqual('Stranger Things - Piloto');
-    expect(response.body.duracao).toEqual('45 minutos');
-    expect(response.body.videoLink).toEqual('https://youtube.com/watch?v=101');
+    expect(response.body.data.videoId).toEqual('101');
+    expect(response.body.data.titulo).toEqual('Stranger Things - Piloto');
+    expect(response.body.data.duracao).toEqual('45 minutos');
+    expect(response.body.data.videoLink).toEqual('https://youtube.com/watch?v=101');
   });
 
   it('should return 404 when video is not found', async () => {

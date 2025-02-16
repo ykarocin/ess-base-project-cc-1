@@ -1,24 +1,21 @@
-import { Request, Response, Router } from 'express';
-import HistoryService from '../services/history.service';
-import { SuccessResult } from '../utils/result';
+const { Router } = require('express');
+const HistoryService = require('../services/history.service');
+const { SuccessResult } = require('../utils/result');
 
-export default class HistoryController {
-  public router: Router;
-  private historyService: HistoryService;
-  private prefix: string = '/users';
-
-  constructor(router: Router, historyService: HistoryService) {
+class HistoryController {
+  constructor(router, historyService) {
     this.router = router;
     this.historyService = historyService;
+    this.prefix = '/users';
     this.initRoutes();
   }
 
-  private initRoutes(): void {
+  initRoutes() {
     this.router.get(`${this.prefix}/:id/history`, this.getHistory.bind(this));
     this.router.put(`${this.prefix}/:id/history`, this.updateHistory.bind(this));
   }
 
-  private async getHistory(req: Request, res: Response): Promise<void> {
+  async getHistory(req, res) {
     try {
       const userId = req.params.id;
       const history = await this.historyService.getHistory(userId);
@@ -27,7 +24,7 @@ export default class HistoryController {
         msg: `${req.method} ${req.originalUrl}`,
         data: videoIds,
       }).handle(res);
-    } catch (error: any) {
+    } catch (error) {
       res.status(error.status || 500).json({
         msg: error.msg || error.message,
         msgCode: error.msgCode,
@@ -35,7 +32,7 @@ export default class HistoryController {
     }
   }
 
-  private async updateHistory(req: Request, res: Response): Promise<void> {
+  async updateHistory(req, res) {
     try {
       const userId = req.params.id;
       const videoData = req.body;
@@ -46,7 +43,7 @@ export default class HistoryController {
         data: { message: result.message, history: result.history.map(item => item.videoId) },
         code: status,
       }).handle(res);
-    } catch (error: any) {
+    } catch (error) {
       res.status(error.status || 500).json({
         msg: error.msg || error.message,
         msgCode: error.msgCode,
@@ -54,3 +51,5 @@ export default class HistoryController {
     }
   }
 }
+
+module.exports = HistoryController;

@@ -1,25 +1,25 @@
-import { loadFeature, defineFeature } from 'jest-cucumber';
-import HistoryRepository from '../../src/repositories/history.repository';
-import HistoryItemEntity from '../../src/entities/history.item.entity';
-import HistoryService from '../../src/services/history.service';
+const { loadFeature, defineFeature } = require('jest-cucumber');
+const HistoryRepository = require('../../src/repositories/history.repository');
+const HistoryItemEntity = require('../../src/entities/history.item.entity');
+const HistoryService = require('../../src/services/history.service');
 
 const feature = loadFeature('tests/features/tests-service-history.feature');
 
-defineFeature(feature, (test) => {
-  let mockHistoryRepository: HistoryRepository;
-  let service: HistoryService;
-  let history: HistoryItemEntity[];
-  let historyItemReturned: HistoryItemEntity | null;
-  let userIdToCall: string;
-  let mockHistoryItem: HistoryItemEntity;
+defineFeature(feature, test => {
+  let mockHistoryRepository;
+  let service;
+  let history;
+  let historyItemReturned;
+  let userIdToCall;
+  let mockHistoryItem;
 
   beforeEach(() => {
     mockHistoryRepository = {
       getHistoryByUserId: jest.fn(),
       getHistoryItem: jest.fn(),
       add: jest.fn(),
-      updateById: jest.fn(), // Alterado aqui: updateById
-    } as any;
+      updateById: jest.fn(),
+    };
     service = new HistoryService(mockHistoryRepository);
   });
 
@@ -36,19 +36,19 @@ defineFeature(feature, (test) => {
         const item1 = new HistoryItemEntity({ userId, videoId: videoId1, ultimaVisualizacao: now });
         const item2 = new HistoryItemEntity({ userId, videoId: videoId2, ultimaVisualizacao: now });
         const item3 = new HistoryItemEntity({ userId, videoId: videoId3, ultimaVisualizacao: now });
-        (mockHistoryRepository.getHistoryByUserId as jest.Mock).mockResolvedValue([item1, item2, item3]);
+        mockHistoryRepository.getHistoryByUserId.mockResolvedValue([item1, item2, item3]);
       }
     );
 
     when(
       /^o método getHistory do HistoryService for chamado com o id do usuário "(.*)"$/,
-      async (userId) => {
+      async userId => {
         history = await service.getHistory(userId);
       }
     );
 
     then(/^o array retornado deve conter a lista com os ids "(.*)", "(.*)" e "(.*)"$/, (id1, id2, id3) => {
-      const returnedIds = history.map((item) => item.videoId);
+      const returnedIds = history.map(item => item.videoId);
       expect(returnedIds).toEqual([id1, id2, id3]);
     });
   });
@@ -63,20 +63,20 @@ defineFeature(feature, (test) => {
           videoId,
           ultimaVisualizacao: new Date().toISOString(),
         });
-        (mockHistoryRepository.getHistoryItem as jest.Mock).mockResolvedValue(mockHistoryItem);
+        mockHistoryRepository.getHistoryItem.mockResolvedValue(mockHistoryItem);
       }
     );
 
     when(
       /^o método getHistoryItem do HistoryService for chamado com o id "(.*)"$/,
-      async (videoId) => {
+      async videoId => {
         historyItemReturned = await mockHistoryRepository.getHistoryItem(userIdToCall, videoId);
       }
     );
 
-    then(/^o item retornado deve ter videoId "(.*)"$/, (videoId) => {
+    then(/^o item retornado deve ter videoId "(.*)"$/, videoId => {
       expect(historyItemReturned).not.toBeNull();
-      expect(historyItemReturned!.videoId).toEqual(videoId);
+      expect(historyItemReturned.videoId).toEqual(videoId);
     });
   });
 
@@ -86,7 +86,7 @@ defineFeature(feature, (test) => {
     });
 
     given('esse usuário não possui o vídeo "201" no histórico', async () => {
-      (mockHistoryRepository.getHistoryItem as jest.Mock).mockResolvedValue(null);
+      mockHistoryRepository.getHistoryItem.mockResolvedValue(null);
     });
 
     when(
@@ -98,23 +98,23 @@ defineFeature(feature, (test) => {
           videoId: videoData.videoId,
           ultimaVisualizacao: new Date().toISOString(),
         });
-        (mockHistoryRepository.add as jest.Mock).mockResolvedValue(newItem);
-        (mockHistoryRepository.getHistoryByUserId as jest.Mock).mockResolvedValue([newItem]);
+        mockHistoryRepository.add.mockResolvedValue(newItem);
+        mockHistoryRepository.getHistoryByUserId.mockResolvedValue([newItem]);
         const result = await service.addOrUpdateHistory(userIdToCall, videoData);
         history = result.history;
       }
     );
 
-    then(/^o status da resposta deve ser "(.*)"$/, (statusCode) => {
+    then(/^o status da resposta deve ser "(.*)"$/, statusCode => {
       expect(history.length).toBeGreaterThan(0);
     });
 
-    and(/^o corpo da resposta \(JSON\) contém "(.*)"$/, (expectedMessage) => {
+    and(/^o corpo da resposta \(JSON\) contém "(.*)"$/, expectedMessage => {
       expect(history[0].videoId).toEqual("201");
     });
 
     and('agora o histórico do usuário com id "3" possui o id "201"', () => {
-      const returnedIds = history.map((item) => item.videoId);
+      const returnedIds = history.map(item => item.videoId);
       expect(returnedIds).toContain("201");
     });
   });
@@ -127,13 +127,12 @@ defineFeature(feature, (test) => {
         videoId: "201",
         ultimaVisualizacao: new Date("2020-01-01").toISOString(),
       });
-      (mockHistoryRepository.getHistoryItem as jest.Mock).mockResolvedValue(mockHistoryItem);
-      // Aqui usamos updateById no lugar de update
-      (mockHistoryRepository.updateById as jest.Mock).mockResolvedValue({
+      mockHistoryRepository.getHistoryItem.mockResolvedValue(mockHistoryItem);
+      mockHistoryRepository.updateById.mockResolvedValue({
         ...mockHistoryItem,
         ultimaVisualizacao: new Date().toISOString(),
       });
-      (mockHistoryRepository.getHistoryByUserId as jest.Mock).mockResolvedValue([mockHistoryItem]);
+      mockHistoryRepository.getHistoryByUserId.mockResolvedValue([mockHistoryItem]);
     });
 
     when(
@@ -145,11 +144,11 @@ defineFeature(feature, (test) => {
       }
     );
 
-    then(/^o status da resposta deve ser "(.*)"$/, (statusCode) => {
+    then(/^o status da resposta deve ser "(.*)"$/, statusCode => {
       expect(history.length).toBeGreaterThan(0);
     });
 
-    and(/^o corpo da resposta \(JSON\) contém "(.*)"$/, (expectedMessage) => {
+    and(/^o corpo da resposta \(JSON\) contém "(.*)"$/, expectedMessage => {
       expect(mockHistoryRepository.updateById).toHaveBeenCalled();
     });
   });

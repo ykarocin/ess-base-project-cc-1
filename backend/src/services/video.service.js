@@ -1,15 +1,13 @@
-import VideoRepository from '../repositories/video.repository';
-import { HttpNotFoundError } from '../utils/errors/http.error';
-import VideoEntity from '../entities/video.entity';
+const VideoRepository = require('../repositories/video.repository');
+const { HttpNotFoundError } = require('../utils/errors/http.error');
+const VideoEntity = require('../entities/video.entity');
 
-export default class VideoService {
-  private videoRepository: VideoRepository;
-
-  constructor(videoRepository: VideoRepository) {
+class VideoService {
+  constructor(videoRepository) {
     this.videoRepository = videoRepository;
   }
 
-  public async getVideo(videoId: string): Promise<VideoEntity> {
+  async getVideo(videoId) {
     const video = await this.videoRepository.getVideoByVideoId(videoId);
     if (!video) {
       throw new HttpNotFoundError({ msg: 'Vídeo não encontrado', msgCode: 'video_not_found' });
@@ -17,7 +15,7 @@ export default class VideoService {
     return video;
   }
 
-  public async registerView(videoId: string, userId: string): Promise<{ message: string; videoId: string; userId: string }> {
+  async registerView(videoId, userId) {
     const video = await this.videoRepository.getVideoByVideoId(videoId);
     if (!video) {
       throw new HttpNotFoundError({ msg: 'Vídeo não encontrado', msgCode: 'video_not_found' });
@@ -26,3 +24,5 @@ export default class VideoService {
     return { message: 'Visualização registrada com sucesso', videoId: video.videoId, userId };
   }
 }
+
+module.exports = VideoService;

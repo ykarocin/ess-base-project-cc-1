@@ -1,17 +1,16 @@
-import BaseRepository from './base.repository';
-import HistoryItemEntity from '../entities/history.item.entity';
-import { HttpInternalServerError } from '../utils/errors/http.error';
+const BaseRepository = require('./base.repository');
+const { HttpInternalServerError } = require('../utils/errors/http.error');
 
-export default class HistoryRepository extends BaseRepository<HistoryItemEntity> {
+class HistoryRepository extends BaseRepository {
   constructor() {
     super('histories');
   }
 
-  public async init(): Promise<void> {
+  async init() {
     await super.init();
   }
 
-  public async getHistoryByUserId(userId: string): Promise<HistoryItemEntity[]> {
+  async getHistoryByUserId(userId) {
     try {
       const sql = `SELECT * FROM histories WHERE userId = ?`;
       const rows = await this.db.all(sql, [userId]);
@@ -21,7 +20,7 @@ export default class HistoryRepository extends BaseRepository<HistoryItemEntity>
     }
   }
 
-  public async getHistoryItem(userId: string, videoId: string): Promise<HistoryItemEntity | null> {
+  async getHistoryItem(userId, videoId) {
     try {
       const sql = `SELECT * FROM histories WHERE userId = ? AND videoId = ?`;
       const row = await this.db.get(sql, [userId, videoId]);
@@ -31,3 +30,5 @@ export default class HistoryRepository extends BaseRepository<HistoryItemEntity>
     }
   }
 }
+
+module.exports = HistoryRepository;

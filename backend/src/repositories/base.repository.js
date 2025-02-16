@@ -1,28 +1,24 @@
-import Database from '../database';
-import BaseEntity from '../entities/base.entity';
-import { HttpInternalServerError } from '../utils/errors/http.error';
-import { v4 as uuidv4 } from 'uuid';
+const Database = require('../database');
+const { v4: uuidv4 } = require('uuid');
+const { HttpInternalServerError } = require('../utils/errors/http.error');
 
-export default class BaseRepository<T extends BaseEntity> {
-  protected tableName: string;
-  protected db: any;
-
-  constructor(tableName: string) {
+class BaseRepository {
+  constructor(tableName) {
     this.tableName = tableName;
   }
 
-  public async init(): Promise<void> {
+  async init() {
     const database = await Database.getInstance();
     this.db = database.db;
   }
 
-  public async add(data: T): Promise<T> {
+  async add(data) {
     try {
       const newId = uuidv4();
       data.id = newId;
       const keys = Object.keys(data);
       const placeholders = keys.map(() => '?').join(', ');
-      const values = keys.map(key => (data as any)[key]);
+      const values = keys.map(key => data[key]);
       const sql = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders})`;
       await this.db.run(sql, values);
       return data;
@@ -31,12 +27,12 @@ export default class BaseRepository<T extends BaseEntity> {
     }
   }
 
-  public async updateById(id: string, data: Partial<T>): Promise<T | null> {
+  async updateById(id, data) {
     try {
       const keys = Object.keys(data);
       if (keys.length === 0) return null;
       const setClause = keys.map(key => `${key} = ?`).join(', ');
-      const values = keys.map(key => (data as any)[key]);
+      const values = keys.map(key => data[key]);
       values.push(id);
       const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
       await this.db.run(sql, values);
@@ -47,7 +43,7 @@ export default class BaseRepository<T extends BaseEntity> {
     }
   }
 
-  public async findOne(query: string, params: any[]): Promise<T | null> {
+  async findOne(query, params) {
     try {
       const row = await this.db.get(query, params);
       return row;
@@ -56,7 +52,7 @@ export default class BaseRepository<T extends BaseEntity> {
     }
   }
 
-  public async findAll(query: string, params: any[] = []): Promise<T[]> {
+  async findAll(query, params = []) {
     try {
       const rows = await this.db.all(query, params);
       return rows;
@@ -65,3 +61,5 @@ export default class BaseRepository<T extends BaseEntity> {
     }
   }
 }
+
+module.exports = BaseRepository;

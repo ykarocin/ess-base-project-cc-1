@@ -1,21 +1,21 @@
-import { loadFeature, defineFeature } from 'jest-cucumber';
-import VideoRepository from '../../src/repositories/video.repository';
-import VideoEntity from '../../src/entities/video.entity';
-import VideoService from '../../src/services/video.service';
+const { loadFeature, defineFeature } = require('jest-cucumber');
+const VideoRepository = require('../../src/repositories/video.repository');
+const VideoEntity = require('../../src/entities/video.entity');
+const VideoService = require('../../src/services/video.service');
 
 const feature = loadFeature('tests/features/tests-service-video.feature');
 
-defineFeature(feature, (test) => {
-  let mockVideoRepository: VideoRepository;
-  let service: VideoService;
-  let videoReturned: VideoEntity;
-  let video: VideoEntity;
+defineFeature(feature, test => {
+  let mockVideoRepository;
+  let service;
+  let videoReturned;
+  let video;
 
   beforeEach(() => {
     mockVideoRepository = {
       getVideoByVideoId: jest.fn(),
-      update: jest.fn(),
-    } as any;
+      updateById: jest.fn(),
+    };
     service = new VideoService(mockVideoRepository);
   });
 
@@ -32,12 +32,14 @@ defineFeature(feature, (test) => {
           titulo,
           duracao,
           views: 0,
+          likes: 0,
+          videoLink: `https://youtube.com/watch?v=${videoId}`
         });
-        (mockVideoRepository.getVideoByVideoId as jest.Mock).mockResolvedValue(video);
+        mockVideoRepository.getVideoByVideoId.mockResolvedValue(video);
       }
     );
 
-    when(/^o método getVideo do VideoService for chamado com o id "(.*)"$/, async (videoId) => {
+    when(/^o método getVideo do VideoService for chamado com o id "(.*)"$/, async videoId => {
       videoReturned = await service.getVideo(videoId);
     });
 

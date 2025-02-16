@@ -1,32 +1,27 @@
-import HistoryRepository from '../repositories/history.repository';
-import HistoryItemEntity from '../entities/history.item.entity';
-import { HttpNotFoundError } from '../utils/errors/http.error';
+const HistoryRepository = require('../repositories/history.repository');
+const HistoryItemEntity = require('../entities/history.item.entity');
+const { HttpNotFoundError } = require('../utils/errors/http.error');
 
-export default class HistoryService {
-  private historyRepository: HistoryRepository;
-  private validUsers: Set<string> = new Set(['1', '2', '3']);
-
-  constructor(historyRepository: HistoryRepository) {
+class HistoryService {
+  constructor(historyRepository) {
     this.historyRepository = historyRepository;
+    this.validUsers = new Set(['1', '2', '3']);
   }
 
-  public async getHistory(userId: string): Promise<HistoryItemEntity[]> {
+  async getHistory(userId) {
     if (!this.validUsers.has(userId)) {
       throw new HttpNotFoundError({ msg: 'Usuário não encontrado', msgCode: 'user_not_found' });
     }
     return await this.historyRepository.getHistoryByUserId(userId);
   }
 
-  public async addOrUpdateHistory(
-    userId: string,
-    videoData: { videoId: string; titulo?: string }
-  ): Promise<{ message: string; history: HistoryItemEntity[] }> {
+  async addOrUpdateHistory(userId, videoData) {
     if (!this.validUsers.has(userId)) {
       throw new HttpNotFoundError({ msg: 'Usuário não encontrado', msgCode: 'user_not_found' });
     }
     const now = new Date().toISOString();
     const existing = await this.historyRepository.getHistoryItem(userId, videoData.videoId);
-    let message: string;
+    let message;
     if (existing) {
       await this.historyRepository.updateById(existing.id, { ultimaVisualizacao: now });
       message = 'Data de visualização atualizada';
@@ -43,3 +38,5 @@ export default class HistoryService {
     return { message, history };
   }
 }
+
+module.exports = HistoryService;
