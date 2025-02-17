@@ -19,6 +19,7 @@ Given('o usuário realiza uma requisição de busca no sistema de streaming com 
     }
 });
 
+// Adicionando suporte para múltiplos filtros
 Given('o usuário realiza uma requisição de busca no sistema de streaming com os filtros {string} e {string}', async function (filtro1, filtro2) {
     try {
         const processarFiltro = (filtro) => {
@@ -72,6 +73,14 @@ Then('o backend retorna apenas filmes lançados no ano {int}', function (anoEspe
     expect(response.data.resultados).to.be.an('array').that.is.not.empty; 
     response.data.resultados.forEach(filme => {
         expect(filme.ano).to.equal(anoEsperado); 
+    });
+});
+
+// Novo passo para verificar a busca por nome
+Then('o backend retorna uma lista de filmes que contém {string} no título', function (tituloEsperado) {
+    expect(response.data.resultados).to.be.an('array').that.is.not.empty; 
+    response.data.resultados.forEach(filme => {
+        expect(filme.titulo.toLowerCase()).to.include(tituloEsperado.toLowerCase());
     });
 });
 
