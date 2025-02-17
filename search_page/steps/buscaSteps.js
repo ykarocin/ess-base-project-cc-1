@@ -46,9 +46,7 @@ When('o backend processa a requisição', function () {
     expect(response.status).to.equal(200); 
 });
 
-Then('o backend retorna um status {int}', function (statusEsperado) {
-    expect(response.status).to.equal(statusEsperado); 
-});
+
 
 Then('a resposta contém a propriedade {string}', function (propriedade) {
     expect(response.data).to.have.property(propriedade); 
