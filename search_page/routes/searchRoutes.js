@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const filmes = [
-    { titulo: "Vingadores", genero: "Ação", avaliacao: 8.5, ano: 2012 },
-    { titulo: "Homem-Aranha", genero: "Ação", avaliacao: 7.8, ano: 2002 },
-    { titulo: "Deadpool", genero: "Comédia", avaliacao: 8.0, ano: 2016 },
-    { titulo: "Parasita", genero: "Drama", avaliacao: 8.6, ano: 2019 },
-    { titulo: "A Culpa é das Estrelas", genero: "Romance", avaliacao: 7.7, ano: 2014 },
-    { titulo: "Titanic", genero: "Romance", avaliacao: 8.0, ano: 1997 },
-    { titulo: "Coringa", genero: "Drama", avaliacao: 8.4, ano: 2019 }
+    { id: 1, titulo: "Vingadores", genero: "Ação", avaliacao: 8.5, ano: 2012 },
+    { id: 2, titulo: "Homem-Aranha", genero: "Ação", avaliacao: 7.8, ano: 2002 },
+    { id: 3, titulo: "Deadpool", genero: "Comédia", avaliacao: 8.0, ano: 2016 },
+    { id: 4, titulo: "Parasita", genero: "Drama", avaliacao: 8.6, ano: 2019 },
+    { id: 5, titulo: "A Culpa é das Estrelas", genero: "Romance", avaliacao: 7.7, ano: 2014 },
+    { id: 6, titulo: "Titanic", genero: "Romance", avaliacao: 8.0, ano: 1997 },
+    { id: 7, titulo: "Coringa", genero: "Drama", avaliacao: 8.4, ano: 2019 }
 ];
 
 router.get("/", (req, res) => {
