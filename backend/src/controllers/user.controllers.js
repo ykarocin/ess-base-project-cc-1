@@ -2,7 +2,6 @@ import { error } from 'console'
 import fs from 'fs'
 import path from 'path'
 import bcrypt from 'bcryptjs'
-import userService from '../models/userService.js'
 
 export const getAll = (req, res) => {
     try {

@@ -2,9 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/generateToken.js'
-import userService from '../models/userService.js'
 
-export const signup = async (req, res) => {
+export const signup = async (req, res) => { 
     try {
          const {fullName, username, birth_date, gender, photo, password, confirmPassword } = req.body 
 
@@ -14,23 +13,16 @@ export const signup = async (req, res) => {
             })
         }
 
-        // var data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
+        var data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
 
         // USERNAME ALREADY USED
-        const existingUser = await userService.getUserByUsername(username);
-        if (existingUser) {
+        const user = data.filter(element => element.username === username)
+        if (user && user.length > 0) {
             console.log("Username already used")
             return res.status(409).json({
                 error: "Username already used"
-            });
+            })
         }
-        // const user = data.filter(element => element.username === username)
-        // if (user && user.length > 0) {
-        //     console.log("Username already used")
-        //     return res.status(409).json({
-        //         error: "Username already used"
-        //     })
-        // }
 
         // HASH PASSWORD HERE
         const salt = await bcrypt.genSalt(10)
@@ -50,18 +42,16 @@ export const signup = async (req, res) => {
 
         generateTokenAndSetCookie(id, res)
 
-        // data.push(newUser)
+        data.push(newUser)
 
-        // fs.writeFileSync(path.resolve('./samples/users.json'), JSON.stringify(data, null, 2))
-
-        const createdUser = await userService.createUser(newUser);
+        fs.writeFileSync(path.resolve('./samples/users.json'), JSON.stringify(data, null, 2))
 
         res.status(201).json({
-            id: createdUser.id,
-            fullName: createdUser.fullName,
-            username: createdUser.username,
-            birth_date: createdUser.birth_date,
-            gender: createdUser.gender,
+            id,
+            fullName,
+            username,
+            birth_date,
+            gender,
         })
 
     } catch (error) {
