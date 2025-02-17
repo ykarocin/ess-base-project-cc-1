@@ -3,7 +3,6 @@ require('express-async-errors');
 const cors = require('cors');
 const logger = require('./logger');
 const setupRoutes = require('./routes/index');
-const { HttpError } = require('./utils/errors/http.error');
 const { FailureResult } = require('./utils/result');
 
 const app = express();

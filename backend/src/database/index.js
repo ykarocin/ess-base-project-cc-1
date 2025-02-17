@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const DatabaseUtils = require('../utils/database');
 
 class Database {
   static async getInstance() {
@@ -32,6 +33,12 @@ class Database {
         videoId TEXT,
         ultimaVisualizacao TEXT
       );
+	  CREATE TABLE IF NOT EXISTS lists (
+        id TEXT PRIMARY KEY,
+        userId TEXT,
+        videoIds TEXT,
+        titulo TEXT
+      );
     `);
   }
 
@@ -42,23 +49,17 @@ class Database {
   }
 
   async seed() {
-    function generateUUID() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    }
+    
     await this.db.exec(`
       INSERT INTO videos (id, videoId, titulo, duracao, views, likes, videoLink) VALUES
-      ('${generateUUID()}', '101', 'Stranger Things - Piloto', '45 minutos', 0, 0, 'https://youtube.com/watch?v=101'),
-      ('${generateUUID()}', '102', 'Breaking Bad - Piloto', '60 minutos', 0, 0, 'https://youtube.com/watch?v=102');
+      ('${DatabaseUtils.generateUUID()}', '101', 'Stranger Things - Piloto', '45 minutos', 0, 0, 'https://youtube.com/watch?v=101'),
+      ('${DatabaseUtils.generateUUID()}', '102', 'Breaking Bad - Piloto', '60 minutos', 0, 0, 'https://youtube.com/watch?v=102');
     `);
     const now = new Date().toISOString();
     await this.db.exec(`
       INSERT INTO histories (id, userId, videoId, ultimaVisualizacao) VALUES
-      ('${generateUUID()}', '1', '101', '${now}'),
-      ('${generateUUID()}', '1', '102', '${now}');
+      ('${DatabaseUtils.generateUUID()}', '1', '101', '${now}'),
+      ('${DatabaseUtils.generateUUID()}', '1', '102', '${now}');
     `);
   }
 }
