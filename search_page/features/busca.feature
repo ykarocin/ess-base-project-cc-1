@@ -20,3 +20,10 @@ Feature: Busca com Filtros
     Then o backend retorna um status 200
     And a resposta contém a propriedade "resultados"
     And o backend retorna apenas filmes lançados no ano 2016
+
+  Scenario: Busca por nome de filme
+    Given o usuário realiza uma requisição de busca no sistema de streaming com o filtro "nome: Vingadores"
+    When o backend processa a requisição
+    Then o backend retorna um status 200
+    And a resposta contém a propriedade "resultados"
+    And o backend retorna uma lista de filmes que contém "Vingadores" no título
