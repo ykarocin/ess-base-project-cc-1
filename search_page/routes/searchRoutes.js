@@ -12,21 +12,24 @@ const filmes = [
 ];
 
 router.get("/", (req, res) => {
-  let { genero, avaliacao_min, ano } = req.query;
+    let { genero, avaliacao_min, ano, nome } = req.query;
 
-  let resultados = filmes;
+    let resultados = filmes;
 
-  if (genero) {
-    resultados = resultados.filter(filme => filme.genero.toLowerCase() === genero.toLowerCase());
-  }
-  if (avaliacao_min) {
-    resultados = resultados.filter(filme => filme.avaliacao >= parseFloat(avaliacao_min));
-  }
-  if (ano) {
-    resultados = resultados.filter(filme => filme.ano === parseInt(ano));
-  }
+    if (genero) {
+        resultados = resultados.filter(filme => filme.genero.toLowerCase() === genero.toLowerCase());
+    }
+    if (avaliacao_min) {
+        resultados = resultados.filter(filme => filme.avaliacao >= parseFloat(avaliacao_min));
+    }
+    if (ano) {
+        resultados = resultados.filter(filme => filme.ano === parseInt(ano));
+    }
+    if (nome) {
+        resultados = resultados.filter(filme => filme.titulo.toLowerCase().includes(nome.toLowerCase()));
+    }
 
-  res.json({ resultados, total: resultados.length });
+    res.json({ resultados, total: resultados.length });
 });
 
 module.exports = router;
