@@ -2,8 +2,9 @@ import { error } from 'console'
 import fs from 'fs'
 import path from 'path'
 import bcrypt from 'bcryptjs'
+import userService from '../models/userService.js'
 
-export const getAllJson = (req, res) => {
+export const getAll = (req, res) => {
     try {
 
         const data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
@@ -31,7 +32,7 @@ export const getAllJson = (req, res) => {
     }
 }
 
-export const getUserByIdJson = (req, res) => {
+export const getUserById = (req, res) => {
     try {
 
         const users = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
@@ -61,7 +62,7 @@ export const getUserByIdJson = (req, res) => {
     }
 }
 
-export const updateUserJson = async (req, res) => {
+export const updateUser = async (req, res) => {
     try {
 
         let data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
@@ -129,7 +130,7 @@ export const updateUserJson = async (req, res) => {
     }
 }
 
-export const deleteUserJson = async (req, res) => {
+export const deleteUser = async (req, res) => {
     try {
 
         let data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))

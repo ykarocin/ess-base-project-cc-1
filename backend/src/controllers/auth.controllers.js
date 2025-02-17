@@ -2,8 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/generateToken.js'
+import userService from '../models/userService.js'
 
-export const signupJson = async (req, res) => {
+export const signup = async (req, res) => {
     try {
          const {fullName, username, birth_date, gender, photo, password, confirmPassword } = req.body 
 
@@ -13,16 +14,23 @@ export const signupJson = async (req, res) => {
             })
         }
 
-        var data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
+        // var data = JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
 
         // USERNAME ALREADY USED
-        const user = data.filter(element => element.username === username)
-        if (user && user.length > 0) {
+        const existingUser = await userService.getUserByUsername(username);
+        if (existingUser) {
             console.log("Username already used")
             return res.status(409).json({
                 error: "Username already used"
-            })
+            });
         }
+        // const user = data.filter(element => element.username === username)
+        // if (user && user.length > 0) {
+        //     console.log("Username already used")
+        //     return res.status(409).json({
+        //         error: "Username already used"
+        //     })
+        // }
 
         // HASH PASSWORD HERE
         const salt = await bcrypt.genSalt(10)
@@ -42,16 +50,18 @@ export const signupJson = async (req, res) => {
 
         generateTokenAndSetCookie(id, res)
 
-        data.push(newUser)
+        // data.push(newUser)
 
-        fs.writeFileSync(path.resolve('./samples/users.json'), JSON.stringify(data, null, 2))
+        // fs.writeFileSync(path.resolve('./samples/users.json'), JSON.stringify(data, null, 2))
+
+        const createdUser = await userService.createUser(newUser);
 
         res.status(201).json({
-            id,
-            fullName,
-            username,
-            birth_date,
-            gender,
+            id: createdUser.id,
+            fullName: createdUser.fullName,
+            username: createdUser.username,
+            birth_date: createdUser.birth_date,
+            gender: createdUser.gender,
         })
 
     } catch (error) {
@@ -62,7 +72,7 @@ export const signupJson = async (req, res) => {
     }
 }
 
-export const loginJson = async (req, res) => {
+export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         var data =  JSON.parse(fs.readFileSync(path.resolve('./samples/users.json'), 'utf-8'))
@@ -93,7 +103,7 @@ export const loginJson = async (req, res) => {
     }
 }
 
-export const logoutJson = async (req, res) => {
+export const logout = async (req, res) => {
     try {
         res.cookie("jwt", "", {maxAge: 0})
 
