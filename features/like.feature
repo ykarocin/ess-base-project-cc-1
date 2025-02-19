@@ -33,6 +33,6 @@ Scenario: Adicionar item a lista de “Séries Curtidas”
 
 Scenario: Remover item da lista de “Séries Curtidas”
 	Given  A lista “Séries curtidas” do usuário “Ykaro” contém os itens “Breaking Bad” e “The Boys”
-    When Uma requisição “DELETE” é enviada para “/usuario/seriesCurtidas/theBoys” com o item “The Boys”
+    When Uma requisição “PUT” é enviada para “/usuario/seriesCurtidas/theBoys” com o item “The Boys”
 	Then O status da resposta deve ser “200”
     And A lista “séries curtidas” do usuário “Ykaro” contém o item “Breaking Bad”
