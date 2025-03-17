@@ -1,12 +1,14 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useState, useEffect, useContext } from "react";
+import { useForm } from "react-hook-form";
 import styles from "./index.module.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useEffect } from "react";
 import { HomeContext } from "../../context/HomeContext";
-import { TestFormSchema, TestFormType } from "../../forms/TestForm";
+import { TestFormSchema } from "../../forms/TestForm";
 import { Link } from "react-router-dom";
 import Button from "../../../../shared/components/Button";
+import { curtir } from "../Liked/likedSeries"
 
+const userid = "Ykaro";
 const CreateTest = () => {
   const { state, prevState, service } = useContext(HomeContext);
 
@@ -15,13 +17,12 @@ const CreateTest = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TestFormType>({
+  } = useForm({
     resolver: zodResolver(TestFormSchema),
   });
 
-  const onSubmit: SubmitHandler<TestFormType> = async (body) => {
-    service.createTest(body);
-    reset();
+  const onSubmit = async (body) => {
+    curtir(userid, body.name);
   };
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const CreateTest = () => {
 
   return (
     <section className={styles.container}>
-      <h1 className={styles.title}>Crie um test</h1>
+      <h1 className={styles.title}>Series</h1>
       <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.formInputContainer}>
           <input
@@ -52,11 +53,11 @@ const CreateTest = () => {
         </div>
 
         <Button data-cy="create" type="submit">
-          CRIAR
+          CURTIR
         </Button>
 
-        <Link data-cy="view-tests" to="/tests">
-          VER TESTS
+        <Link to="/likedSeries">
+          VER SÉRIES CURTIDAS
         </Link>
       </form>
     </section>
