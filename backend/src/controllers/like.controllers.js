@@ -14,9 +14,11 @@ export const seriesCurtidas = async (req, res) => {
         }
 
         // Extrai apenas a propriedade "Séries Curtidas"
-        const seriesCurtidas = userData.map(item => ({
-            "Séries Curtidas": item["Séries Curtidas"]
-        }));
+        // const seriesCurtidas = userData.map(item => ({
+        //     "Séries Curtidas": item["Séries Curtidas"]
+        // }));
+        const seriesCurtidas = userData.map(item => item["Séries Curtidas"]).flat();
+
 
         res.status(200).json(seriesCurtidas);
     } catch (error) {
@@ -33,13 +35,10 @@ export const curtir = async(req, res) => {
         const { userid } = req.params;
         const { serie } = req.body;
 
-        // Ler o arquivo JSON
         const filePath = path.resolve('./src/database/users.json');
 
         let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        // Encontrar o usuário
         let user = data.find(element => element.user == userid);
-        console.log(user)
 
         if (typeof user["Séries Curtidas"] === "string") {
             user["Séries Curtidas"] = [user["Séries Curtidas"]];
@@ -60,6 +59,7 @@ export const curtir = async(req, res) => {
 
         res.status(200).json({ message: "Série curtida com sucesso!", user });
     } catch (error) {
+        console.error("Erro na função curtir:", error);
         res.status(500).json({
             error: "Internal Server Error"
         });
@@ -71,11 +71,6 @@ export const descurtir = async(req,res) => {
         const filePath = path.resolve('./src/database/users.json');
         const { userid } = req.params;
         const { serie } = req.body;
-
-        console.log("Recebendo requisição para remover série...");
-        console.log("Usuário:", userid);
-        console.log("Série:", serie);
-
         // Ler o arquivo JSON
         let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
@@ -108,8 +103,6 @@ export const descurtir = async(req,res) => {
 
         // Escrever de volta no arquivo JSON
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-
-        console.log(`Série "${serie}" removida com sucesso do usuário "${userid}"`);
 
         res.status(200).json({ message: "Série removida com sucesso!", user });
     } catch (error) {
