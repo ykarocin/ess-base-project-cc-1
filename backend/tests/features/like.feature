@@ -2,20 +2,8 @@ Feature: Curtir
     As a usuário do sistema
     I want to informar à plataforma que gostei de um conteúdo
     So that i can receber recomendações semelhantes à aquele conteúdo
-
-# Scenario: Clicar no botão de curtida
-# 	Given A lista “Séries Curtidas” está vazia 
-# 	And O usuário “Ykaro” está na tela de visualização da série “The Boys” 
-# 	When O usuário “Ykaro” clica no botão “curtir”
-#     And O usuário “Ykaro” acessa a lista “séries curtidas”
-#     Then “The boys” está na lista “séries curtidas”
-
-# Scenario: Clicar novamente no botão de curtida
-# 	Given A série “The Boys” está na lista “séries curtidas”
-# 	And O usuário “Ykaro” está na tela de visualização da série “The Boys”
-# 	When O usuário “Ykaro” clica no botão “curtir”
-#     And O usuário “Ykaro” acessa a lista “séries curtidas”
-#     Then A lista “séries curtidas” está vazia
+    
+#Apenas os cenários de serviço referentes à feature foram colocados aqui
 
 Scenario: Obter a lista de séries curtidas pelo usuário
     Given O usuário "Ykaro" está logado no sistema

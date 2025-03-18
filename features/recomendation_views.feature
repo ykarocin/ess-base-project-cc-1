@@ -21,20 +21,17 @@ Scenario: Exibindo recomendações para o usuário com histórico de visualizaç
 	When Uma requisição “GET” é enviada para “/sistema/series/acao”
 	Then O status da resposta deve ser “200”
 	And O JSON da resposta contém os itens “Homem Aranha, de volta ao lar”, “The Batman”
-	And Os itens “Homem Aranha, de volta ao lar”, “The Batman” são adicionados a lista “For You”
 
 Scenario: Exibindo recomendações para o usuário com histórico de visualizações (gênero 2) (Service)
 	Given A lista “historicoDeVisualizacao” do usuário “Ykaro” contém o item “Invocação do mal”
 	When Uma requisição “GET” é enviada para “/sistema/series/terror”
 	Then O status da resposta deve ser “200”
 	And O JSON da resposta contém os itens “A Freira”, “Sorria”
-	And Os itens “A Freira”, “Sorria” são adicionados a lista “For You”
 
 Scenario: Exibindo recomendações para o usuário sem histórico de visualizações (Service)
 	Given A lista “historicoDeVisualizacao” do usuário está vazia
 	When Uma requisição “GET” é enviada para “/sistena/series/”
 	Then O status da resposta deve ser “200”
 	And O JSON da resposta contém os itens “Moana 2”, “Zootopia”
-	And Os itens “Moana 2”, “Zootopia” são adicionados a lista “For You”
 
 

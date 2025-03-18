@@ -32,6 +32,17 @@
     "Séries Curtidas": [
       "Breaking Bad"
     ],
+    "historicoDeVisualizacao": [
+      "O Incrível Hulk",
+      "Homem-Formiga",
+      "Invocação do mal"
+    ],
     "id": "1"
+  },
+  {
+    "user": "João",
+    "Séries Curtidas": [],
+    "historicoDeVisualizacao": [],
+    "id": "2"
   }
 ]
