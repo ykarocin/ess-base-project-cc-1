@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSeriesCurtidas, descurtir } from "./likedSeries"; // Supondo que a função está num arquivo separado
+import { getSeriesCurtidas, descurtir } from "../../../../shared/services/likedSeries"; // Supondo que a função está num arquivo separado
 import { Navigate, useParams, useNavigate } from "react-router-dom";
 
 const LikedSeries = () => {

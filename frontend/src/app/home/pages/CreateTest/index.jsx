@@ -6,7 +6,7 @@ import { HomeContext } from "../../context/HomeContext";
 import { TestFormSchema } from "../../forms/TestForm";
 import { Link } from "react-router-dom";
 import Button from "../../../../shared/components/Button";
-import { curtir } from "../Liked/likedSeries"
+import { curtir } from "../../../../shared/services/likedSeries"
 
 const userid = "Ykaro";
 const CreateTest = () => {
