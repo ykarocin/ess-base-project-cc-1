@@ -3,7 +3,7 @@ const { HttpInternalServerError } = require('../utils/errors/http.error');
 
 class HistoryRepository extends BaseRepository {
   constructor() {
-    super('users_history');
+    super('histories');
   }
 
   async init() {
@@ -12,8 +12,9 @@ class HistoryRepository extends BaseRepository {
 
   async getHistoryByUserId(userId) {
     try {
-      const sql = `SELECT * FROM users_history WHERE userId = ?`;
-      return await this.db.all(sql, [userId]);
+      const sql = `SELECT * FROM histories WHERE userId = ?`;
+      const rows = await this.db.all(sql, [userId]);
+      return rows;
     } catch (e) {
       throw new HttpInternalServerError({ msg: 'Erro ao buscar histórico' });
     }
@@ -21,8 +22,9 @@ class HistoryRepository extends BaseRepository {
 
   async getHistoryItem(userId, videoId) {
     try {
-      const sql = `SELECT * FROM users_history WHERE userId = ? AND videoId = ?`;
-      return await this.db.get(sql, [userId, videoId]);
+      const sql = `SELECT * FROM histories WHERE userId = ? AND videoId = ?`;
+      const row = await this.db.get(sql, [userId, videoId]);
+      return row;
     } catch (e) {
       throw new HttpInternalServerError({ msg: 'Erro ao buscar item de histórico' });
     }

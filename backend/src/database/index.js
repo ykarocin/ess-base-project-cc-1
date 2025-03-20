@@ -1,107 +1,71 @@
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('sqlite3');
+const { open } = require('sqlite');
 const path = require('path');
 
 class Database {
-  constructor() {
-    this.db = null;
+  static async getInstance() {
+    if (!Database.instance) {
+      Database.instance = new Database();
+      await Database.instance._init();
+    }
+    return Database.instance;
   }
 
-  connect() {
-    return new Promise((resolve, reject) => {
-      // Usa o process.cwd() para garantir que o arquivo seja criado na raiz do projeto
-      const dbPath = path.join(process.cwd(), 'database.sqlite');
-      this.db = new sqlite3.Database(dbPath, (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
+  async _init() {
+    const dbPath = path.resolve(process.cwd(), 'database.sqlite');
+    this.db = await open({
+      filename: dbPath,
+      driver: sqlite3.Database,
     });
-  }
-
-  run(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.run(sql, params, function (err) {
-        if (err) reject(err);
-        else resolve(this);
-      });
-    });
-  }
-
-  get(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.get(sql, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      });
-    });
-  }
-
-  all(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+    await this.db.exec('PRAGMA foreign_keys = ON;');
+    await this.initialize();
   }
 
   async initialize() {
-    // Cria a tabela de usuários
-    await this.run(`CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      nome TEXT
-    )`);
+    await this.db.exec(`
+      CREATE TABLE IF NOT EXISTS videos (
+        id TEXT PRIMARY KEY,
+        videoId TEXT,
+        titulo TEXT,
+        duracao TEXT,
+        views INTEGER,
+        likes INTEGER,
+        videoLink TEXT
+      );
+      CREATE TABLE IF NOT EXISTS histories (
+        id TEXT PRIMARY KEY,
+        userId TEXT,
+        videoId TEXT,
+        ultimaVisualizacao TEXT
+      );
+      CREATE TABLE IF NOT EXISTS lists (
+        id TEXT PRIMARY KEY,
+        userId TEXT,
+        videoIds TEXT,
+        titulo TEXT
+      );
+    `);
+  }
 
-    // Cria a tabela de histórico
-    await this.run(`CREATE TABLE IF NOT EXISTS users_history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId TEXT,
-      videoId TEXT,
-      ultimaVisualizacao TEXT,
-      FOREIGN KEY(userId) REFERENCES users(id)
-    )`);
-
-    // Cria a tabela de vídeos
-    await this.run(`CREATE TABLE IF NOT EXISTS videos (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      videoId TEXT UNIQUE,
-      titulo TEXT,
-      duracao TEXT,
-      views INTEGER
-    )`);
+  static async reset() {
+    const instance = await Database.getInstance();
+    await instance.db.exec(`DROP TABLE IF EXISTS videos; DROP TABLE IF EXISTS histories;`);
+    await instance.initialize();
   }
 
   async seed() {
-    
-      await this.run(`CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        nome TEXT
-      )`);
-
-    await this.run(`INSERT OR IGNORE INTO users (id, nome) VALUES (?, ?)`, ['1', 'User 1']);
-    await this.run(`INSERT OR IGNORE INTO users (id, nome) VALUES (?, ?)`, ['2', 'User 2']);
-    await this.run(`INSERT OR IGNORE INTO users (id, nome) VALUES (?, ?)`, ['3', 'User 3']);
-
-    // Insere vídeos
-    await this.run(
-      `INSERT OR IGNORE INTO videos (videoId, titulo, duracao, views) VALUES (?, ?, ?, ?)`,
-      ['101', 'Stranger Things - Piloto', '45 minutos', 0]
-    );
-    await this.run(
-      `INSERT OR IGNORE INTO videos (videoId, titulo, duracao, views) VALUES (?, ?, ?, ?)`,
-      ['102', 'Breaking Bad - Piloto', '60 minutos', 0]
-    );
-
-    // Insere histórico para o usuário "1"
+    await this.db.exec(`
+      INSERT INTO videos (id, videoId, titulo, duracao, views, likes, videoLink) VALUES
+      ('${Date.now()}-101', '101', 'Stranger Things - Piloto', '45 minutos', 0, 0, 'https://youtube.com/watch?v=101'),
+      ('${Date.now()}-102', '102', 'Breaking Bad - Piloto', '60 minutos', 0, 0, 'https://youtube.com/watch?v=102');
+    `);
     const now = new Date().toISOString();
-    await this.run(
-      `INSERT OR IGNORE INTO users_history (userId, videoId, ultimaVisualizacao) VALUES (?, ?, ?)`,
-      ['1', '101', now]
-    );
-    await this.run(
-      `INSERT OR IGNORE INTO users_history (userId, videoId, ultimaVisualizacao) VALUES (?, ?, ?)`,
-      ['1', '102', now]
-    );
+    await this.db.exec(`
+      INSERT INTO histories (id, userId, videoId, ultimaVisualizacao) VALUES
+      ('${Date.now()}-h1', '1', '101', '${now}'),
+      ('${Date.now()}-h2', '1', '102', '${now}');
+    `);
   }
 }
 
-module.exports = new Database();
+module.exports = Database;

@@ -1,40 +1,45 @@
+const { Router } = require('express');
 const VideoService = require('../services/video.service');
-const { FailureResult } = require('../utils/result');
-const { HttpError } = require('../utils/errors/http.error');
+const { SuccessResult } = require('../utils/result');
 
 class VideoController {
+  constructor(router, videoService) {
+    this.router = router;
+    this.videoService = videoService;
+    this.prefix = '/videos';
+    this.initRoutes();
+  }
+
+  initRoutes() {
+    this.router.get(`${this.prefix}/:id`, this.getVideo.bind(this));
+    this.router.post(`${this.prefix}/:id/visualizacao`, this.registerView.bind(this));
+  }
+
   async getVideo(req, res) {
     try {
-      const { id } = req.params;
-      const result = await new VideoService().getVideo(id);
-      return result.handle(res);
+      const videoId = req.params.id;
+      const video = await this.videoService.getVideo(videoId);
+      new SuccessResult({
+        msg: `${req.method} ${req.originalUrl}`,
+        data: video,
+      }).handle(res);
     } catch (error) {
-      if (error instanceof HttpError) {
-        return new FailureResult({
-          msg: error.msg || error.message,
-          msgCode: error.msgCode,
-          code: error.status,
-        }).handle(res);
-      }
-      return new FailureResult({ msg: 'Unexpected error' }).handle(res);
+      res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });
     }
   }
 
   async registerView(req, res) {
     try {
-      const { id } = req.params;
+      const videoId = req.params.id;
       const { userId } = req.body;
-      const result = await new VideoService().registerView(id, userId);
-      return result.handle(res);
+      const result = await this.videoService.registerView(videoId, userId);
+      new SuccessResult({
+        msg: `${req.method} ${req.originalUrl}`,
+        data: result,
+        code: 201,
+      }).handle(res);
     } catch (error) {
-      if (error instanceof HttpError) {
-        return new FailureResult({
-          msg: error.msg || error.message,
-          msgCode: error.msgCode,
-          code: error.status,
-        }).handle(res);
-      }
-      return new FailureResult({ msg: 'Unexpected error' }).handle(res);
+      res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });
     }
   }
 }

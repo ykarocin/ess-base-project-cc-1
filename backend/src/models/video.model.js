@@ -1,11 +1,13 @@
 const VideoEntity = require('../entities/video.entity');
 
 class VideoModel {
-  constructor(videoEntity) {
-    this.videoId = videoEntity.videoId;
-    this.titulo = videoEntity.titulo;
-    this.duracao = videoEntity.duracao;
-    this.views = videoEntity.views;
+  constructor(video) {
+    this.videoId = video.videoId;
+    this.titulo = video.titulo;
+    this.duracao = video.duracao;
+    this.views = video.views;
+    this.likes = video.likes;
+    this.videoLink = video.videoLink;
   }
 }
 

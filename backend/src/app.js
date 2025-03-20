@@ -4,33 +4,23 @@ const cors = require('cors');
 const logger = require('./logger');
 const setupRoutes = require('./routes/index');
 const { FailureResult } = require('./utils/result');
-const { HttpError } = require('./utils/errors/http.error');
-const Database = require('./database'); // p/ conectar e seedar
 
 const app = express();
+
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 
-(async () => {
-  await Database.connect();
-  await Database.initialize();
-  await Database.seed();
-})();
-
 setupRoutes(app);
 
-// Tratamento global de erros
+// Global error handler
 app.use((error, req, res, next) => {
-  if (error instanceof HttpError) {
-    return new FailureResult({
-      msg: error.msg || error.message,
-      msgCode: error.msgCode,
-      code: error.status,
-    }).handle(res);
+  if (error.status >= 500) {
+    logger.error(error.toString());
   }
-  return new FailureResult({
-    msg: error.message || 'Unexpected Error',
-    code: 500
+  new FailureResult({
+    msg: error.msg || error.message,
+    msgCode: error.msgCode,
+    code: error.status,
   }).handle(res);
 });
 

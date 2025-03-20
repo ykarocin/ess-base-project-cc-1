@@ -8,4 +8,5 @@ class HistoryItemEntity extends BaseEntity {
     this.ultimaVisualizacao = ultimaVisualizacao;
   }
 }
+
 module.exports = HistoryItemEntity;

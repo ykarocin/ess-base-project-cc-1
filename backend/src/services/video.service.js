@@ -1,48 +1,27 @@
-const db = require('../database');
-const { SuccessResult } = require('../utils/result');
+const VideoRepository = require('../repositories/video.repository');
 const { HttpNotFoundError } = require('../utils/errors/http.error');
+const VideoEntity = require('../entities/video.entity');
 
 class VideoService {
+  constructor(videoRepository) {
+    this.videoRepository = videoRepository;
+  }
+
   async getVideo(videoId) {
-    const row = await db.get(`SELECT * FROM videos WHERE videoId = ?`, [videoId]);
-    if (!row) {
-      throw new HttpNotFoundError({
-        msg: 'Vídeo não encontrado',
-        msgCode: 'video_not_found',
-      });
+    const video = await this.videoRepository.getVideoByVideoId(videoId);
+    if (!video) {
+      throw new HttpNotFoundError({ msg: 'Vídeo não encontrado', msgCode: 'video_not_found' });
     }
-    return new SuccessResult({
-      msg: 'Vídeo encontrado',
-      code: 200,
-      data: {
-        videoId: row.videoId,
-        titulo: row.titulo,
-        duracao: row.duracao,
-        views: row.views,
-      },
-    });
+    return video;
   }
 
   async registerView(videoId, userId) {
-    const row = await db.get(`SELECT * FROM videos WHERE videoId = ?`, [videoId]);
-    if (!row) {
-      throw new HttpNotFoundError({
-        msg: 'Vídeo não encontrado',
-        msgCode: 'video_not_found',
-      });
+    const video = await this.videoRepository.getVideoByVideoId(videoId);
+    if (!video) {
+      throw new HttpNotFoundError({ msg: 'Vídeo não encontrado', msgCode: 'video_not_found' });
     }
-    const updatedViews = (row.views || 0) + 1;
-    await db.run(`UPDATE videos SET views = ? WHERE videoId = ?`, [updatedViews, videoId]);
-
-    return new SuccessResult({
-      msg: 'Visualização registrada com sucesso',
-      code: 201,
-      data: {
-        message: 'Visualização registrada com sucesso',
-        videoId,
-        userId,
-      },
-    });
+    await this.videoRepository.updateById(video.id, { views: video.views + 1 });
+    return { message: 'Visualização registrada com sucesso', videoId: video.videoId, userId };
   }
 }
 

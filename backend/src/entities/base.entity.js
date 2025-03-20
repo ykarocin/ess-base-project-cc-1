@@ -1,5 +1,2 @@
-class BaseEntity {
-  constructor() {
-  }
-}
+class BaseEntity {}
 module.exports = BaseEntity;
