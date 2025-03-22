@@ -17,9 +17,15 @@ class SuccessResult extends Result {
   }
 
   handle(res) {
-    return res.status(this.code).send(this);
-  }
+    return res.status(this.code).json({
+      msg: this.msg,
+      msgCode: this.msgCode,
+      code: this.code,
+      data: this.data,
+    });
+  }  
 }
+
 
 class FailureResult extends Result {
   constructor({ msg, msgCode, code }) {

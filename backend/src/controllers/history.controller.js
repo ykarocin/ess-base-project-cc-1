@@ -18,12 +18,12 @@ class HistoryController {
   async getHistory(req, res) {
     try {
       const userId = req.params.id;
-      const history = await this.historyService.getHistory(userId);
-      // Supondo que history seja um array de itens com propriedade videoId
-      const videoIds = history.map(item => item.videoId);
+      const result = await this.historyService.getHistory(userId);
+      // Retorna somente os videoIds para os testes
       new SuccessResult({
         msg: `${req.method} ${req.originalUrl}`,
-        data: videoIds,
+        data: result.data.map(item => item.videoId),
+        code: result.code,
       }).handle(res);
     } catch (error) {
       res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });
@@ -35,11 +35,10 @@ class HistoryController {
       const userId = req.params.id;
       const videoData = req.body;
       const result = await this.historyService.addOrUpdateHistory(userId, videoData);
-      const status = result.message === 'Vídeo adicionado ao histórico' ? 201 : 200;
       new SuccessResult({
-        msg: `${req.method} ${req.originalUrl}`,
-        data: { message: result.message, history: result.history.map(item => item.videoId) },
-        code: status,
+        msg: result.msg,
+        data: { history: result.data.map(item => item.videoId) },
+        code: result.code,
       }).handle(res);
     } catch (error) {
       res.status(error.status || 500).json({ msg: error.msg || error.message, msgCode: error.msgCode });

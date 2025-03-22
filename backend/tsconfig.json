@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "compilerOptions": {
     "target": "es6",
@@ -10,16 +9,3 @@
     "experimentalDecorators": true
   }
 }
-=======
-{
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "outDir": "dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "strictPropertyInitialization": false,
-    "experimentalDecorators": true
-  }
-}
->>>>>>> upstream/main
