@@ -1,0 +1,48 @@
+[
+  {
+    "user": "Sistema",
+    "top10": [
+      "The Boys",
+      "Breaking Bad",
+      "The Last of Us",
+      "Marley e Eu",
+      "Vingadores: Guerra Infinita",
+      "The Walking Dead",
+      "The Batman",
+      "Ainda estou aqui",
+      "La La Land",
+      "Valente"
+    ],
+    "terror": [
+      "A Freira",
+      "Sorria"
+    ],
+    "acao": [
+      "Homem Aranha, de volta ao lar",
+      "The Batman"
+    ],
+    "geral": [
+      "Moana 2",
+      "Zootopia"
+    ],
+    "id": 1
+  },
+  {
+    "user": "Ykaro",
+    "Séries Curtidas": [
+      "Breaking Bad"
+    ],
+    "historicoDeVisualizacao": [
+      "O Incrível Hulk",
+      "Homem-Formiga",
+      "Invocação do mal"
+    ],
+    "id": "1"
+  },
+  {
+    "user": "João",
+    "Séries Curtidas": [],
+    "historicoDeVisualizacao": [],
+    "id": "2"
+  }
+]

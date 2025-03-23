@@ -1,7 +1,6 @@
-import { ReactNode } from "react";
 import { HomeProvider } from "./app/home/context/HomeContext";
 
-const Provider = ({ children }: { children: ReactNode }) => {
+const Provider = ({ children }) => {
   return <HomeProvider>{children}</HomeProvider>;
 };
 
