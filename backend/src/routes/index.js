@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const { Router } = require('express');
 const { di } = require('../di');
 const TestController = require('../controllers/test.controller');
@@ -30,3 +31,14 @@ module.exports = (app) => {
 //     new TestController(router, di.getService(TestService)).router
 //   );
 // };
+=======
+module.exports = (app) => {
+  const historyRoutes = require('./history.routes');
+  const videoRoutes = require('./video.routes');
+  const listRoutes = require('./list.routes');
+
+  app.use('/api', historyRoutes);
+  app.use('/api', videoRoutes);
+  app.use('/api', listRoutes);
+};
+>>>>>>> main

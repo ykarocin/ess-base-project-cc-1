@@ -1,176 +1,65 @@
-const Database = require('../database');  // Caminho correto para o arquivo
-const BaseEntity = require('../entities/base.entity');
-const { HttpInternalServerError } = require('../utils/errors/http.error');
+const Database = require('../database');
 const { v4: uuidv4 } = require('uuid');
+const { HttpInternalServerError } = require('../utils/errors/http.error');
 
 class BaseRepository {
-  constructor(prefix) {
-    this.prefix = prefix;
-    this.db = Database.getInstance();
+  constructor(tableName) {
+    this.tableName = tableName;
+  }
+
+  async init() {
+    const database = await Database.getInstance();
+    this.db = database.db;
   }
 
   async add(data) {
     try {
-      if (!this.db.data[this.prefix]) {
-        this.db.data[this.prefix] = [];
-      }
-      const newItem = {
-        ...data,
-        id: uuidv4(),
-      };
-      this.db.data[this.prefix].push(newItem);
-      return newItem;
+      const newId = uuidv4();
+      data.id = newId;
+      const keys = Object.keys(data);
+      const placeholders = keys.map(() => '?').join(', ');
+      const values = keys.map(key => data[key]);
+      const sql = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders})`;
+      await this.db.run(sql, values);
+      return data;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao adicionar registro' });
     }
   }
 
-  async update(filter, data) {
+  async updateById(id, data) {
     try {
-      if (!this.db.data[this.prefix]) {
-        return null;
-      }
-      const item = this.db.data[this.prefix].find(filter);
-      if (item) {
-        delete data.id;
-        Object.assign(item, data);
-        return item;
-      }
-      return null;
+      const keys = Object.keys(data);
+      if (keys.length === 0) return null;
+      const setClause = keys.map(key => `${key} = ?`).join(', ');
+      const values = keys.map(key => data[key]);
+      values.push(id);
+      const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
+      await this.db.run(sql, values);
+      const row = await this.db.get(`SELECT * FROM ${this.tableName} WHERE id = ?`, id);
+      return row;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao atualizar registro' });
     }
   }
 
-  async findOne(filter) {
+  async findOne(query, params) {
     try {
-      if (!this.db.data[this.prefix]) {
-        return null;
-      }
-      return this.db.data[this.prefix].find(filter) || null;
+      const row = await this.db.get(query, params);
+      return row;
     } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao buscar registro' });
     }
   }
 
-  async findAll(filter) {
+  async findAll(query, params = []) {
     try {
-      if (!this.db.data[this.prefix]) {
-        return [];
-      }
-      return filter
-        ? this.db.data[this.prefix].filter(filter)
-        : this.db.data[this.prefix];
+      const rows = await this.db.all(query, params);
+      return rows;
     } catch (e) {
-      throw new HttpInternalServerError();
-    }
-  }
-
-  async delete(filter) {
-    try {
-      if (!this.db.data[this.prefix]) {
-        return;
-      }
-
-      this.db.data[this.prefix] = this.db.data[this.prefix].filter(filter);
-    } catch (e) {
-      throw new HttpInternalServerError();
+      throw new HttpInternalServerError({ msg: 'Erro ao buscar registros' });
     }
   }
 }
 
 module.exports = BaseRepository;
-
-
-
-
-
-
-// import Database from '../database';
-// import BaseEntity from '../entities/base.entity';
-// import { HttpInternalServerError } from '../utils/errors/http.error';
-// import { v4 as uuidv4 } from 'uuid';
-
-// type FilterFunction<T> = (item: T) => boolean;
-
-// export default class BaseRepository<T extends BaseEntity> {
-//   private prefix: string;
-//   private db: Database;
-
-//   constructor(prefix: string) {
-//     this.prefix = prefix;
-//     this.db = Database.getInstance();
-//   }
-
-//   public async add(data: T): Promise<T> {
-//     try {
-//       if (!this.db.data[this.prefix]) {
-//         this.db.data[this.prefix] = [];
-//       }
-//       const newItem = {
-//         ...data,
-//         id: uuidv4(),
-//       };
-//       this.db.data[this.prefix].push(newItem);
-//       return newItem;
-//     } catch (e) {
-//       throw new HttpInternalServerError();
-//     }
-//   }
-
-//   public async update(
-//     filter: FilterFunction<T>,
-//     data: Partial<T>
-//   ): Promise<T | null> {
-//     try {
-//       if (!this.db.data[this.prefix]) {
-//         return null;
-//       }
-//       const item = this.db.data[this.prefix].find(filter);
-//       if (item) {
-//         delete data.id;
-//         Object.assign(item, data);
-//         return item;
-//       }
-//       return null;
-//     } catch (e) {
-//       throw new HttpInternalServerError();
-//     }
-//   }
-
-//   public async findOne(filter: FilterFunction<T>): Promise<T | null> {
-//     try {
-//       if (!this.db.data[this.prefix]) {
-//         return null;
-//       }
-//       return this.db.data[this.prefix].find(filter) || null;
-//     } catch (e) {
-//       throw new HttpInternalServerError();
-//     }
-//   }
-
-//   public async findAll(filter?: FilterFunction<T>): Promise<T[]> {
-//     try {
-//       if (!this.db.data[this.prefix]) {
-//         return [];
-//       }
-//       return filter
-//         ? this.db.data[this.prefix].filter(filter)
-//         : this.db.data[this.prefix];
-//     } catch (e) {
-//       throw new HttpInternalServerError();
-//     }
-//   }
-
-//   public async delete(filter: FilterFunction<T>): Promise<void> {
-//     try {
-//       if (!this.db.data[this.prefix]) {
-//         return;
-//       }
-
-//       this.db.data[this.prefix] = this.db.data[this.prefix].filter(filter);
-//     } catch (e) {
-//       throw new HttpInternalServerError();
-//     }
-//   }
-// }

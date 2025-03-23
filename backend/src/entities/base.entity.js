@@ -1,7 +1,3 @@
-class BaseEntity {
-  constructor(id) {
-    this.id = id;
-  }
-}
+class BaseEntity {}
 
 module.exports = BaseEntity;

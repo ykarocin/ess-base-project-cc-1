@@ -38,23 +38,31 @@ class HttpNotFoundError extends HttpError {
 
 class HttpInternalServerError extends HttpError {
   constructor({ msg, msgCode } = {}) {
+<<<<<<< HEAD
     super({
       status: 500,
       msg: msg || 'Internal Server Error',
       msgCode,
       slug: 'internal-server',
     });
+=======
+    super({ status: 500, msg: msg || 'Internal Server Error', msgCode, slug: 'internal-server' });
+>>>>>>> main
   }
 }
 
 class HttpNotImplementedError extends HttpError {
   constructor({ msg, msgCode } = {}) {
+<<<<<<< HEAD
     super({
       status: 501,
       msg: msg || 'Not Implemented Error',
       msgCode,
       slug: 'not-implemented',
     });
+=======
+    super({ status: 501, msg: msg || 'Not Implemented Error', msgCode, slug: 'not-implemented' });
+>>>>>>> main
   }
 }
 
@@ -67,6 +75,7 @@ module.exports = {
   HttpInternalServerError,
   HttpNotImplementedError,
 };
+<<<<<<< HEAD
 
 
 
@@ -144,3 +153,5 @@ module.exports = {
 //     });
 //   }
 // }
+=======
+>>>>>>> main

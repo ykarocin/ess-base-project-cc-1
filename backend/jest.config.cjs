@@ -5,8 +5,15 @@ module.exports = {
   rootDir: '',
   testRegex: ['.*\.step\.js$'],  
   transform: {
+    '^.+\\.(tsx?|jsx?)$': 'ts-jest',
     '^.+\\.ts$': 'ts-jest',
-    '^.+\\.js$': 'ts-jest',  
+    '^.+\\.js$': 'ts-jest',
+    '^.+\\.tsx?$': 'ts-jest', // Para arquivos TypeScript
+    '^.+\\.jsx?$': 'babel-jest', // Para arquivos JavaScript
   },
-  setupFilesAfterEnv: ['./setupTests.js'],  
+  setupFilesAfterEnv: [],
+  transformIgnorePatterns: ['/node_modules/'],
+  moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  testEnvironment: 'node',
+  extensionsToTreatAsEsm: ['.ts', '.tsx']
 };
