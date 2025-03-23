@@ -1,4 +1,3 @@
-const HistoryRepository = require('../repositories/history.repository');
 const HistoryItemEntity = require('../entities/history.item.entity');
 const { HttpNotFoundError } = require('../utils/errors/http.error');
 
@@ -12,7 +11,8 @@ class HistoryService {
     if (!this.validUsers.has(userId)) {
       throw new HttpNotFoundError({ msg: 'Usuário não encontrado', msgCode: 'user_not_found' });
     }
-    return await this.historyRepository.getHistoryByUserId(userId);
+    const history = await this.historyRepository.getHistoryByUserId(userId);
+    return { code: 200, data: history };
   }
 
   async addOrUpdateHistory(userId, videoData) {
@@ -21,10 +21,11 @@ class HistoryService {
     }
     const now = new Date().toISOString();
     const existing = await this.historyRepository.getHistoryItem(userId, videoData.videoId);
-    let message;
+    let msg, code;
     if (existing) {
       await this.historyRepository.updateById(existing.id, { ultimaVisualizacao: now });
-      message = 'Data de visualização atualizada';
+      msg = 'Data de visualização atualizada';
+      code = 200;
     } else {
       const newItem = new HistoryItemEntity({
         userId,
@@ -32,10 +33,11 @@ class HistoryService {
         ultimaVisualizacao: now,
       });
       await this.historyRepository.add(newItem);
-      message = 'Vídeo adicionado ao histórico';
+      msg = 'Vídeo adicionado ao histórico';
+      code = 201;
     }
     const history = await this.historyRepository.getHistoryByUserId(userId);
-    return { message, history };
+    return { code, msg, data: history };
   }
 }
 

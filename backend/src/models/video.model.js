@@ -6,7 +6,6 @@ class VideoModel {
     this.titulo = video.titulo;
     this.duracao = video.duracao;
     this.views = video.views;
-    this.likes = video.likes;
     this.videoLink = video.videoLink;
   }
 }
