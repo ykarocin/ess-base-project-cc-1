@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const generateTokenAndSetCookie = (userId, res) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId }, "okasok83847jmfdkmas29-90d", {
         expiresIn: '15d',
     });
 
