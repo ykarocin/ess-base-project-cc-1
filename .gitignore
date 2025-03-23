@@ -1,13 +1,5 @@
-# Python
 *.pyc
 __pycache__/
 
-# Logs e arquivos temporários
 *.log
 *.swp
-
-# Ambiente virtual Python
-venv/
-
-# Dependências Node.js
-node_modules/
