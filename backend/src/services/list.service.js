@@ -49,7 +49,30 @@ class ListService {
 
 	return await this.listRepository.updateList(updatedList);
   }
+  async removeVideoFromList(videoId, id) {
+	if (!videoId || !id) {
+	  throw new HttpBadRequestError('videoId e id são obrigatórios');
+	}
 
+	const list = await this.listRepository.getListById(id);
+
+	if (!list) {
+	  throw new HttpNotFoundError('Lista não encontrada');
+    }
+
+	const videoIds = JSON.parse(list.videoIds);
+
+	if (!videoIds.includes(videoId)) {
+	  throw new HttpNotFoundError('Vídeo não encontrado na lista');
+  	}
+	videoIds.pop(videoId);
+	const updatedList = {
+	  ...list,
+	  videoIds: JSON.stringify(videoIds),
+	}
+	return await this.listRepository.updateList(updatedList);
+  }
+  
   async deleteList(id) {
 	if (!id) {
 	  throw new HttpBadRequestError('id é obrigatório');
