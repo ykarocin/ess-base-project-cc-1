@@ -46,12 +46,12 @@ export default function LikedMoviesPage() {
 
   return (
     <div className="min-h-screen bg-white p-4">
-      <div className="mb-6">
-        <Link href="/" className="inline-flex items-center text-[#e31010] hover:underline">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar para a página inicial
-        </Link>
-      </div>
+        <div className="mb-6">
+          <Link href="/homepage" className="inline-flex items-center text-[#e31010] hover:underline">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Voltar para a página inicial
+          </Link>
+        </div>
       <h1 className="text-3xl font-bold text-[#e31010] mb-6">Filmes Curtidos</h1>
 
       {movieDetails.length === 0 ? (
