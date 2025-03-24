@@ -24,7 +24,7 @@ export default function Login() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({username: username.trim(), password: password.trim()}),
+          body: JSON.stringify({username: username, password: password}),
         });
   
         if (response.ok) {
