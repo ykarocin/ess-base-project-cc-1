@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { readDatabase, writeDatabase, findUser } from '../utils/databaseFunc';
 
 export const seriesCurtidas = async (req, res) => {
     try {
@@ -35,11 +36,7 @@ export const curtir = async(req, res) => {
 
         const { userid } = req.params;
         const { serie } = req.body;
-
-        const filePath = path.resolve('./src/database/users.json');
-
-        let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        let user = data.find(element => element.user == userid);
+        const { user, data } = findUser(userid);
 
         if (typeof user["Séries Curtidas"] === "string") {
             user["Séries Curtidas"] = [user["Séries Curtidas"]];
@@ -56,7 +53,7 @@ export const curtir = async(req, res) => {
 
         user["Séries Curtidas"].push(serie);
 
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        writeDatabase(data);
 
         res.status(200).json({ message: "Série curtida com sucesso!", user });
     } catch (error) {
@@ -69,15 +66,9 @@ export const curtir = async(req, res) => {
 
 export const descurtir = async(req,res) => {
     try {
-        const filePath = path.resolve('./src/database/users.json');
         const { userid } = req.params;
         const { serie } = req.body;
-        
-        // Ler o arquivo JSON
-        let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-        // Encontrar o usuário
-        let user = data.find(element => element.user === userid);
+        const { user, data } = findUser(userid);
 
         if (!user) {
             console.log("Usuário não encontrado:", userid);
@@ -103,8 +94,7 @@ export const descurtir = async(req,res) => {
         // // Remover a série do array
         user["Séries Curtidas"] = user["Séries Curtidas"].filter(s => s !== serie);
 
-        // Escrever de volta no arquivo JSON
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        writeDatabase(data);
 
         res.status(200).json({ message: "Série removida com sucesso!", user });
     } catch (error) {
