@@ -134,4 +134,3 @@ export function getMoviesByGenre(genreId: string) {
 export function getMovieById(id: string) {
   return movieData.find((movie) => movie.id === id)
 }
-
