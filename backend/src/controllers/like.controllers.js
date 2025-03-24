@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { readDatabase, writeDatabase, findUser } from '../utils/databaseFunc';
+import { readDatabase, writeDatabase, findUser } from '../utils/databaseFunc.js';
 
 export const seriesCurtidas = async (req, res) => {
     try {
