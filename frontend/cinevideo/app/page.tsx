@@ -1,6 +1,14 @@
-import CineVideo from "@/components/cinevideo"
+// app/page.tsx
+"use client";
+import Login from "./pages/Login";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return <CineVideo />
-}
+  const router = useRouter();
 
+  const handleLoginSuccess = () => {
+    router.push("/");
+  };
+
+  return <Login onLoginSuccess={handleLoginSuccess} />;
+}
