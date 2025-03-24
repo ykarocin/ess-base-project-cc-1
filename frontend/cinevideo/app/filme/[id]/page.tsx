@@ -7,40 +7,68 @@ import { useState, useEffect } from "react"
 import { Heart, ArrowLeft, Play } from "lucide-react"
 
 export default function MoviePage({ params }: { params: { id: string } }) {
+  const userId = "Ykaro"
   const movieId = params.id
   const movie = getMovieById(movieId)
+  const [likedMovies, setLikedMovies] = useState<string[]>([]) // IDs dos filmes curtidos
+  const [liked, setLiked] = useState(false) // Estado do botão curtir
 
-  // Estado para controlar se o filme foi curtido
-  const [liked, setLiked] = useState(false)
-
-  // Ao carregar a página, verificar no localStorage se o filme foi curtido antes
+  // Buscar os filmes curtidos ao carregar a página
   useEffect(() => {
-    const likedMovies = JSON.parse(localStorage.getItem("likedMovies") || "[]")
-    setLiked(likedMovies.includes(movieId))
-  }, [movieId])
-
-  // Função para curtir/descurtir um filme e salvar no localStorage
-  const toggleLike = () => {
-    const likedMovies = JSON.parse(localStorage.getItem("likedMovies") || "[]")
-
-    if (liked) {
-      // Se já estava curtido, remover do array
-      const updatedLikes = likedMovies.filter((id: string) => id !== movieId)
-      localStorage.setItem("likedMovies", JSON.stringify(updatedLikes))
-    } else {
-      // Se não estava curtido, adicionar ao array
-      likedMovies.push(movieId)
-      localStorage.setItem("likedMovies", JSON.stringify(likedMovies))
+    const fetchLikedMovies = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/user/seriesCurtidas/${userId}`)
+        if (!response.ok) {
+          throw new Error("Erro ao buscar filmes curtidos")
+        }
+        const data = await response.json()
+        setLikedMovies(data) // Atualiza a lista de IDs dos filmes curtidos
+      } catch (error) {
+        console.error("Erro ao buscar filmes curtidos:", error)
+      }
     }
 
-    setLiked(!liked)
+    fetchLikedMovies()
+  }, [userId])
+
+  // Verificar se o filme atual está curtido após o estado `likedMovies` ser atualizado
+  useEffect(() => {
+    setLiked(likedMovies.includes(movieId)) // Se o ID do filme estiver na lista, define `liked` como true
+  }, [likedMovies, movieId])
+
+  // Função para curtir/descurtir um filme
+  const toggleLike = async () => {
+    try {
+      const url = liked 
+        ? `http://localhost:4000/user/descurtir/${userId}`
+        : `http://localhost:4000/user/curtir/${userId}`
+        
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ serie: movieId })
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar curtida")
+      }
+
+      setLiked(!liked) // Atualiza o estado local se a requisição for bem-sucedida
+      setLikedMovies((prev) =>
+        liked ? prev.filter((id) => id !== movieId) : [...prev, movieId]
+      )
+    } catch (error) {
+      console.error("Erro ao curtir/descurtir o filme:", error)
+    }
   }
 
   if (!movie) {
     return (
       <div className="min-h-screen bg-white p-4 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Filme não encontrado</h1>
-        <Link href="/" className="text-[#e31010] hover:underline">Voltar para a página inicial</Link>
+        <Link href="/" className="text-[#e31010] hover:underline">
+          Voltar para a página inicial
+        </Link>
       </div>
     )
   }

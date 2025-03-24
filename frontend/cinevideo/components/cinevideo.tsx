@@ -3,12 +3,83 @@
 import { Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { movieData } from "@/lib/movie-data"
+import { getMovieById } from "@/lib/movie-data"
 
 export default function CineVideo() {
   // Estado para controlar a exibição do menu de gêneros
   const [showGenres, setShowGenres] = useState(false)
+  const [topTenMovies, setTopTenMovies] = useState<string[]>([]) // IDs dos filmes do top 10
+  const [recomendationsMovies, setRecomendationsMovies] = useState<string[]>([]) // IDs dos filmes da lista de recomendações
+  const [movieDetails, setMovieDetails] = useState<any[]>([]) // Detalhes dos filmes
+  const [movieDetailsRec, setMovieDetailsRec] = useState<any[]>([]) // Detalhes dos filmes
+
+  useEffect(() => {
+    const fetchTop10 = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/user/top10/Sistema`)
+        if (!response.ok) {
+          throw new Error("Erro ao buscar filmes do top 10")
+        }
+        const data = await response.json()
+        setTopTenMovies(data) // Atualiza a lista de IDs dos filmes curtidos
+      } catch (error) {
+        console.error("Erro ao buscar filmes do top 10:", error)
+      }
+    }
+
+    const fetchRecomendations = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/user/Sistema/series`)
+        if (!response.ok) {
+          throw new Error("Erro ao buscar filmes recomendados")
+        }
+        const NewData = await response.json()
+        setRecomendationsMovies(NewData) // Atualiza a lista de IDs dos filmes curtidos
+      } catch (error) {
+        console.error("Erro ao buscar filmes recomendados:", error)
+      }
+    }
+
+    fetchTop10()
+    fetchRecomendations()
+  }, [])
+
+  useEffect(() => {
+      const fetchMovieDetails = async () => {
+        const movies = await Promise.all(
+          topTenMovies.map(async (movieId) => {
+            const movie = await getMovieById(movieId);
+            return movie;
+          })
+        );
+        setMovieDetails(movies);
+      };
+
+      const fetchMovieDetailsRec = async () => {
+        const movies = await Promise.all(
+          recomendationsMovies.map(async (movieId) => {
+            const movie = await getMovieById(movieId);
+            return movie;
+          })
+        );
+        setMovieDetailsRec(movies);
+      };
+  
+
+
+      if (topTenMovies.length > 0) {
+        fetchMovieDetails();
+      }
+
+      
+      if (recomendationsMovies.length > 0) {
+        fetchMovieDetailsRec();
+      }
+
+
+    }, [topTenMovies, recomendationsMovies]);
 
   // Lista de gêneros disponíveis
   const genres = [
@@ -86,7 +157,7 @@ export default function CineVideo() {
       {/* Seção Top 10 Filmes */}
       <section className="mb-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {top10Movies.map((movie) => (
+          {movieDetails.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
@@ -96,7 +167,7 @@ export default function CineVideo() {
       <section>
         <h2 className="text-[#e31010] text-3xl font-bold mb-6">Recomendados</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {recommendedMovies.map((movie) => (
+          {movieDetailsRec.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
