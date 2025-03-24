@@ -1,5 +1,8 @@
+"use client";
+
 import { Search } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function CineVideo() {
   return (
@@ -26,7 +29,11 @@ export default function CineVideo() {
 
             <div className="flex flex-col gap-2">
               <button className="bg-[#e36161] text-white py-2 px-4 w-full">Gênero</button>
-              <button className="bg-[#e36161] text-white py-2 px-4 w-full">Séries Curtidas</button>
+              <Link href="/likedSeries">
+                <button className="bg-[#e36161] text-white py-2 px-4 w-full">
+                  Séries Curtidas
+                </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -106,7 +106,11 @@ export default function CineVideo() {
                   </div>
                 )}
               </div>
-              <button className="bg-[#e36161] text-white py-2 px-4 w-full">Séries Curtidas</button>
+              <Link href="/likedSeries">
+                <button className="bg-[#e36161] text-white py-2 px-4 w-full">
+                  Séries Curtidas
+                </button>
+              </Link>
             </div>
           </div>
         </div>
