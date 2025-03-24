@@ -66,7 +66,7 @@ export default function GenrePage({ params }: { params: { id: string } }) {
       {/* Seção de filmes do gênero */}
       <section>
         <div className="flex items-center gap-4 mb-6">
-          <Link href="/" className="text-[#e31010] hover:underline">
+          <Link href="/homepage" className="text-[#e31010] hover:underline">
             Voltar
           </Link>
           <h2 className="text-[#e31010] text-3xl font-bold">Filmes de {genreName}</h2>
