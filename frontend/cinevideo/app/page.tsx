@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleLoginSuccess = () => {
-    router.push("/homepage");
+    router.push("/");
   };
 
   return <Login onLoginSuccess={handleLoginSuccess} />;
