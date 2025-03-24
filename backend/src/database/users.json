@@ -2,16 +2,16 @@
   {
     "user": "Sistema",
     "top10": [
-      "The Boys",
-      "Breaking Bad",
-      "The Last of Us",
-      "Marley e Eu",
-      "Vingadores: Guerra Infinita",
-      "The Walking Dead",
-      "The Batman",
-      "Ainda estou aqui",
-      "La La Land",
-      "Valente"
+      "howls-moving-castle",
+      "the-hangover",
+      "superbad",
+      "la-la-land",
+      "the-notebook",
+      "a-quiet-place",
+      "it",
+      "jumanji",
+      "mad-max",
+      "alien"
     ],
     "terror": [
       "A Freira",
@@ -22,15 +22,18 @@
       "The Batman"
     ],
     "geral": [
-      "Moana 2",
-      "Zootopia"
+      "black-panther",
+      "alien",
+      "mad-max",
+      "jumanji"
     ],
     "id": 1
   },
   {
     "user": "Ykaro",
     "Séries Curtidas": [
-      "Breaking Bad"
+      "mad-max",
+      "black-panther"
     ],
     "historicoDeVisualizacao": [
       "O Incrível Hulk",

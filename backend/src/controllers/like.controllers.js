@@ -30,6 +30,7 @@ export const seriesCurtidas = async (req, res) => {
 };
 
 export const curtir = async(req, res) => {
+    console.log(req.body)
     try {
 
         const { userid } = req.params;
@@ -71,6 +72,7 @@ export const descurtir = async(req,res) => {
         const filePath = path.resolve('./src/database/users.json');
         const { userid } = req.params;
         const { serie } = req.body;
+        
         // Ler o arquivo JSON
         let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
@@ -97,8 +99,8 @@ export const descurtir = async(req,res) => {
             console.log(`Série "${serie}" não encontrada para o usuário "${userid}"`);
             return res.status(400).json({ error: "Série não encontrada na lista do usuário" });
         }
-
-        // Remover a série do array
+        
+        // // Remover a série do array
         user["Séries Curtidas"] = user["Séries Curtidas"].filter(s => s !== serie);
 
         // Escrever de volta no arquivo JSON
