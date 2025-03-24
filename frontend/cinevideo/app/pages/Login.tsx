@@ -8,39 +8,37 @@ import Input from "@/components/Input";
 import AuthContainer from "@/components/AuthContainer";
 import AuthFooter from "@/components/AuthFooter";
 
-interface LoginProps {
-    onLoginSuccess: () => void;
-}
-
-export default function Login({ onLoginSuccess }: LoginProps) {
+export default function Login() {
     const router = useRouter();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageColor, setMessageColor] = useState(""); // Nova variável de estado para a cor
 
-    const handleLogin = async () => {
-      //onLoginSuccess();
+    const handleLogin = async () => {  
       
       try {
-        const response = await fetch("/auth/login", {
-          method: "POST",
+        const response = await fetch("http://localhost:4000/auth/login", {
+          method: "POST", 
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify({username: username.trim(), password: password.trim()}),
         });
   
         if (response.ok) {
           // Login bem-sucedido
-          router.push("/");
+          router.push("/homepage");
         } else {
           // Login falhou
           const errorData = await response.json();
-          setError(errorData.error || "Falha no login");
+          setMessage((errorData.error || "Falha no login"));
+          setMessageColor("white"); 
         }
       } catch (error) {
-        setError("Erro de rede ou servidor");
+        setMessage("Erro de rede ou servidor");
+        setMessageColor("white");
       }
     };
 
@@ -49,16 +47,22 @@ export default function Login({ onLoginSuccess }: LoginProps) {
         <AuthContainer>
           <div className="flex flex-col items-center space-y-4">
             <Logo />
-            {error && <p className="text-red-500">{error}</p>}
-            <Input type="text" 
-            placeholder="Usuário/Email" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
+            {message && <p className={`text-${messageColor}-500`}>{message}</p>}
+            <Input
+              type="text"
+              placeholder="Usuário/Email"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
             />
-            <Input type="password" 
-            placeholder="Senha" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            <Input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <Button onClick={handleLogin}>Login</Button>
           </div>
