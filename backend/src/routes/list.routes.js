@@ -1,10 +1,10 @@
-const { Router } = require('express');
-const ListController = require('../controllers/list.controller');
-const { di } = require('../di');
-const ListService = require('../services/list.service');
+import express from "express";
+import ListController from "../controllers/list.controller.js";
+import ListService from "../services/list.service.js";
 
-const router = Router();
-const listService = di.getService(ListService);
+const router = express.Router();
+const listService = new ListService();
+
 new ListController(router, listService);
 
-module.exports = router;
+export default router;
