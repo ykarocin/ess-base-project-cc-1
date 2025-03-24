@@ -187,4 +187,3 @@ export function MovieCard({ movie }: { movie: any }) {
     </Link>
   )
 }
-

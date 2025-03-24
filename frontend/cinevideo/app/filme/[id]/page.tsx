@@ -40,7 +40,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     return (
       <div className="min-h-screen bg-white p-4 flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Filme não encontrado</h1>
-        <Link href="/" className="text-[#e31010] hover:underline">Voltar para a página inicial</Link>
+        <Link href="/homepage" className="text-[#e31010] hover:underline">Voltar para a página inicial</Link>
       </div>
     )
   }
@@ -49,7 +49,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     <div className="min-h-screen bg-white p-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-[#e31010] hover:underline">
+          <Link href="/homepage" className="inline-flex items-center text-[#e31010] hover:underline">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar para a página inicial
           </Link>
