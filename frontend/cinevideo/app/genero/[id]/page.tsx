@@ -1,3 +1,5 @@
+"use client"
+
 import { getMoviesByGenre } from "@/lib/movie-data"
 import { MovieCard } from "@/components/cinevideo"
 import Link from "next/link"
@@ -39,8 +41,21 @@ export default function GenrePage({ params }: { params: { id: string } }) {
                 type="text"
                 placeholder="Pesquisar"
                 className="w-full md:w-64 h-10 px-4 bg-[#fff2f2] rounded-none focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.currentTarget.value) {
+                    window.location.href = `/?search=${encodeURIComponent(e.currentTarget.value)}`
+                  }
+                }}
               />
-              <button className="absolute right-0 top-0 h-10 w-10 bg-[#e36161] flex items-center justify-center">
+              <button
+                className="absolute right-0 top-0 h-10 w-10 bg-[#e36161] flex items-center justify-center"
+                onClick={() => {
+                  const input = document.querySelector('input[placeholder="Pesquisar"]') as HTMLInputElement
+                  if (input && input.value) {
+                    window.location.href = `/?search=${encodeURIComponent(input.value)}`
+                  }
+                }}
+              >
                 <Search className="text-white w-5 h-5" />
               </button>
             </div>
