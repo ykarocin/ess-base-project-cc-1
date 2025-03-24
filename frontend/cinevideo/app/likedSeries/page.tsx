@@ -10,11 +10,12 @@ export default function LikedMoviesPage() {
   const [likedMovies, setLikedMovies] = useState<any[]>([]) // IDs dos filmes curtidos
   const [movieDetails, setMovieDetails] = useState<any[]>([]) // Detalhes dos filmes
   const userId = "Ykaro"
+  const API_URL = "http://localhost:4000/user/seriesCurtidas";
 
   useEffect(() => {
     const fetchLikedMovies = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/user/seriesCurtidas/${userId}`);
+        const response = await fetch(`${API_URL}/${userId}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar filmes curtidos");
         }
