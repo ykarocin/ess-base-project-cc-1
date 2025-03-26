@@ -31,36 +31,21 @@ export default function CineVideo() {
       }
     }
 
-
-    const fetchTop10 = async () => {
-      try {
-        const response = await fetch(`http://localhost:4000/user/top10/Sistema`)
-        if (!response.ok) {
-          throw new Error("Erro ao buscar filmes do top 10")
-        }
-        const data = await response.json()
-        setTopTenMovies(data) // Atualiza a lista de IDs dos filmes curtidos
-      } catch (error) {
-        console.error("Erro ao buscar filmes do top 10:", error)
-      }
-    }
-
-    const fetchRecomendations = async () => {
-      try {
-        const response = await fetch(`http://localhost:4000/user/Sistema/series`)
-        if (!response.ok) {
-          throw new Error("Erro ao buscar filmes recomendados")
-        }
-        const NewData = await response.json()
-        setRecomendationsMovies(NewData) // Atualiza a lista de IDs dos filmes curtidos
-      } catch (error) {
-        console.error("Erro ao buscar filmes recomendados:", error)
-      }
-    }
-
-    fetchTop10()
-    fetchRecomendations()
+    fetchMovies(`http://localhost:4000/user/top10/Sistema`, setTopTenMovies, "Erro ao buscar filmes do top 10");
+    fetchMovies(`http://localhost:4000/user/Sistema/series`, setRecomendationsMovies, "Erro ao buscar filmes recomendados");
   }, [])
+
+  const fetchMovies = async (url: string, setMovies: Function, errorMsg: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(errorMsg);
+      const data = await response.json();
+      setMovies(data);
+    } catch (error) {
+      console.error(errorMsg, error);
+    }
+  };
+  
 
   useEffect(() => {
       const fetchMovieDetails = async () => {
